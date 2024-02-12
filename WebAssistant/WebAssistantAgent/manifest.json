@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "RankTracker",
+    "name": "WebAssistant",
     "version": "1.0",
     "description": "WebAssistant is basicallly a chat popup",
     "permissions": [
