@@ -8,7 +8,7 @@ import './index.css'
 const newElement = document.createElement('div');
 newElement.className = 'cool';
 // newElement.style = 'color: red;'
-newElement.style = ' position: fixed ; bottom: 10vh; right: 10vw; z-index: 12;background-color: blueviolet;'
+// newElement.style = ' position: fixed ; bottom: 10vh; right: 10vw; z-index: 12;'
 
 
 ReactDOM.createRoot(newElement).render(
