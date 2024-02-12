@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "RankTracker",
     "version": "1.0",
-    "description": "Tracks Internal Ranking",
+    "description": "WebAssistant is basicallly a chat popup",
     "permissions": [
         "storage",
         "tabs",
