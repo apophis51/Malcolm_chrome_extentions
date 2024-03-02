@@ -22,6 +22,14 @@
 //   }
 // }
 
+function createButton(text) {
+    var button = document.createElement('button');
+    button.textContent = text;
+    button.className = 'button';
+    // Add any additional button properties or event listeners as needed
+    return button;
+}
+
 function handleClick(event) {
     // Get the target node that was clicked
     var clickedNode = event.target;
@@ -30,6 +38,24 @@ function handleClick(event) {
     console.log("Clicked Node:", clickedNode.textContent);
 
 clickedNode.style.backgroundColor = 'lightyellow';
+// Create buttons
+var button1 = createButton('Button 1');
+var button2 = createButton('Button 2');
+var button3 = createButton('Button 3');
+
+// Create a container div for the buttons
+var buttonContainer = document.createElement('div');
+buttonContainer.className = 'button-container';
+
+// Append buttons to the container
+buttonContainer.appendChild(button1);
+buttonContainer.appendChild(button2);
+buttonContainer.appendChild(button3);
+
+// Insert the container above the clicked node
+clickedNode.parentNode.insertBefore(buttonContainer, clickedNode);
+
+
 
 // Disable all links within the clicked node
 var links = clickedNode.querySelectorAll('a');
