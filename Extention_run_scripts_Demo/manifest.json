@@ -11,7 +11,8 @@
     },
     "content_scripts": [
       {
-        "js": ["scripts/content.js"],
+        "js": ["scripts/content.js","scripts/test.js"],
+        "css":["global.css"],
         "matches": [
           "https://developer.chrome.com/docs/extensions/*",
           "https://developer.chrome.com/docs/webstore/*",

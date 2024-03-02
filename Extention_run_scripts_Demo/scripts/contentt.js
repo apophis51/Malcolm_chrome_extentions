@@ -1,4 +1,5 @@
 const article = document.querySelector("article");
+import 'global.css';
 
 // `document.querySelector` may return null if the selector doesn't match anything.
 if (article) {
