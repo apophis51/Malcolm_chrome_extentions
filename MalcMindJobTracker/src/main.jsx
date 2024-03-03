@@ -1,79 +1,55 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+// import React from 'react'
+// import ReactDOM from 'react-dom/client'
+// import Buttons from './React Components/Buttons.jsx'
+// import './index.css'
+// const reactElement = document.createElement('div');
+// reactElement.className = 'React-Component';
 
-// ReactDOM.createRoot(document.getElementById('root')!).render(
+// ReactDOM.createRoot(reactElement).render(
 //   <React.StrictMode>
-//     <App />
+//     <Buttons />
 //   </React.StrictMode>,
 // )
-// Create a new element
-const newElement = document.createElement('div');
-newElement.className = 'cool';
-// newElement.style = 'color: red;'
-// newElement.style = ' position: fixed ; bottom: 10vh; right: 10vw; z-index: 12;'
 
+import * as buttonUtils from './VanillaUtils/buttonUtils.js';
 
-ReactDOM.createRoot(newElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+// let exportData = {}
 
-
-
-
-function createButton(text) {
-  var button = document.createElement('button');
-  button.textContent = text;
-  button.className = 'button';
-  // Add any additional button properties or event listeners as needed
-  return button;
-}
-
-function removeButton(buttonContainer){
-  var button = document.createElement('button');
-  button.textContent = 'Remove Buttons';
-  button.className = 'button';
-  button.onclick = function() {
-      buttonContainer.remove()
-  }
-  // Add any additional button properties or event listeners as needed
-  return button;
-} 
 
 function handleClick(event) {
   // Get the target node that was clicked
   var clickedNode = event.target;
-
-  // Log the clicked node to the console
+  clickedNode.style.backgroundColor = 'lightyellow';
   console.log("Clicked Node:", clickedNode.textContent);
-
-clickedNode.style.backgroundColor = 'lightyellow';
-// Create buttons
-var button1 = createButton('Button 1');
-button1.style.backgroundColor = 'lightgreen';
-var button2 = createButton('Button 2');
-var button3 = createButton('Button 3');
-
-
 // Create a container div for the buttons
 var buttonContainer = document.createElement('div');
 buttonContainer.className = 'button-container';
 
-var buttonRemove = removeButton(buttonContainer);
+var buttonRemove = buttonUtils.removeButton(buttonContainer);
+buttonRemove.style.backgroundColor = 'lightgreen';
+var button1 = buttonUtils.createButton('Job Title', clickedNode.textContent);
+button1.style.backgroundColor = 'lightgreen';
+var button2 = buttonUtils.createButton('Company', clickedNode.textContent);
+var button3 = buttonUtils.createButton('Description', clickedNode.textContent);
+let button4 = buttonUtils.saveButton()
 
 // Append buttons to the container
 buttonContainer.appendChild(button1);
 buttonContainer.appendChild(button2);
 buttonContainer.appendChild(button3);
+buttonContainer.appendChild(button4);
 buttonContainer.appendChild(buttonRemove);
-buttonContainer.appendChild(newElement)
+//  buttonContainer.appendChild(reactElement)
+ 
+ 
+
 
 // Insert the container above the clicked node
+console.log(clickedNode.textContent)
+if(
+  clickedNode.textContent != 'Job Title' &&  clickedNode.textContent != 'Company' && clickedNode.textContent != 'Description' && clickedNode.textContent != 'Save' && clickedNode.textContent != 'Remove Buttons'){
 clickedNode.parentNode.insertBefore(buttonContainer, clickedNode);
-
+}
 
 
 // Disable all links within the clicked node
@@ -120,11 +96,6 @@ document.addEventListener('click', handleClick);
 urlFetcher()
 
 
-function urlFetche() {
-// Example function; replace with your actual implementation
-return fetch('https://example.com/api/data')
-.then(response => response.json());
-}
 
 async function urlFetcher(dataa){
 console.log('dataa',  dataa)
