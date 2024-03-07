@@ -1,22 +1,31 @@
-// import React from 'react'
+import React from 'react'
 // import ReactDOM from 'react-dom/client'
-// import Buttons from './React Components/Buttons.jsx'
-// import './index.css'
-// const reactElement = document.createElement('div');
-// reactElement.className = 'React-Component';
+import Buttons from './React Components/Buttons.jsx'
+import './index.css'
+import  {createRoot} from 'react-dom/client'
 
-// ReactDOM.createRoot(reactElement).render(
-//   <React.StrictMode>
-//     <Buttons />
-//   </React.StrictMode>,
-// )
+
+
+
 
 import * as buttonUtils from './VanillaUtils/buttonUtils.js';
 
 // let exportData = {}
 
 
+
 function handleClick(event) {
+
+  let reactElement = document.createElement('div');
+reactElement.className = 'React-Component';
+
+// ReactDOM.createRoot(reactElement).render(
+//   <React.StrictMode>
+//     <Buttons />
+//   </React.StrictMode>,
+// )
+let reactInstance = createRoot(reactElement)
+
   // Get the target node that was clicked
   var clickedNode = event.target;
   clickedNode.style.backgroundColor = 'lightyellow';
@@ -28,7 +37,7 @@ buttonContainer.className = 'button-container';
 var buttonRemove = buttonUtils.removeButton(buttonContainer);
 buttonRemove.style.backgroundColor = 'lightgreen';
 var button1 = buttonUtils.createButton('Job_Title', clickedNode.textContent);
-button1.style.backgroundColor = 'lightgreen';
+button1.style.backgroundColor = 'lightblue';
 var button2 = buttonUtils.createButton('Company', clickedNode.textContent);
 var button3 = buttonUtils.createButton('Job_Description', clickedNode.textContent);
 let button4 = buttonUtils.saveButton()
@@ -39,9 +48,20 @@ buttonContainer.appendChild(button2);
 buttonContainer.appendChild(button3);
 buttonContainer.appendChild(button4);
 buttonContainer.appendChild(buttonRemove);
-//  buttonContainer.appendChild(reactElement)
- 
- 
+buttonContainer.appendChild(reactElement)
+
+
+
+
+reactInstance.render(
+  <React.StrictMode>
+    <Buttons test={documentText}/>
+  </React.StrictMode>,
+)
+
+
+
+
 
 
 // Insert the container above the clicked node

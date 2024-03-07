@@ -5,7 +5,8 @@
 import React from 'react'
 import '../index.css'
 
-export default function Buttons() {
+export default function Buttons({test}) {
+  console.log(test)
 
   function handleEvent(event) {
     event.preventDefault()
