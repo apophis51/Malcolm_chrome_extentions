@@ -1,8 +1,8 @@
 import React from 'react'
 // import ReactDOM from 'react-dom/client'
 import Buttons from './React Components/Buttons.jsx'
-import './index.css'
-import  {createRoot} from 'react-dom/client'
+// import './index.css'
+ import  {createRoot} from 'react-dom/client'
 
 
 
@@ -17,6 +17,7 @@ import * as buttonUtils from './VanillaUtils/buttonUtils.js';
 function handleClick(event) {
 
   let reactElement = document.createElement('div');
+  reactElement
 reactElement.className = 'React-Component';
 
 // ReactDOM.createRoot(reactElement).render(
