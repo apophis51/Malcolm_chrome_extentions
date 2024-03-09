@@ -19,6 +19,7 @@ let myButtons = [
   "Reactivate Links",
   "Remove All Injected Buttons"
 ]
+let lastClickedNode = null; // Variable to store the last clicked node
 
 
 // let exportData = {}
@@ -37,22 +38,35 @@ navInstance.render(
 
 function handleClick(event) {
 
+
+  ///  remove last buttons guard
+  let removeButtons = document.querySelectorAll('.button-container');
+  removeButtons.forEach(function(button) {
+      button.remove();
+    });
+///// end remove last buttons guard
+
+
   let reactElement = document.createElement('div');
   reactElement.className = 'React-Component';
   let reactInstance = createRoot(reactElement)
 
   // Get the target node that was clicked
   var clickedNode = event.target;
+
+  ///////////////////////////////////////////// Light Yellow Function
   clickedNode.style.backgroundColor = 'lightyellow';
+  if (lastClickedNode !== null) {
+    lastClickedNode.style.backgroundColor = ''; // Set it to the default or any desired color
+  }
+  lastClickedNode = clickedNode; // Store the clicked node
+  ////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-  
   let documentText = clickedNode.textContent
   // Create a container div for the buttons
   var buttonContainer = document.createElement('div');
   buttonContainer.className = 'button-container';
-
+///////////////////////////////////////// Vanilla Javascript Buttons Function
   var buttonRemove = buttonUtils.removeButton(buttonContainer);
   buttonRemove.style.backgroundColor = 'lightgreen';
   var button1 = buttonUtils.createButton('Job_Title', clickedNode.textContent);
@@ -60,12 +74,11 @@ function handleClick(event) {
   var button2 = buttonUtils.createButton('Company', clickedNode.textContent);
   var button3 = buttonUtils.createButton('Job_Description', clickedNode.textContent);
   let button4 = buttonUtils.saveButton()
-
-  // Append buttons to the container
   buttonContainer.appendChild(button1);
   buttonContainer.appendChild(button2);
   buttonContainer.appendChild(button3);
   buttonContainer.appendChild(button4);
+  ////////////////////////////////////////
   buttonContainer.appendChild(buttonRemove);
   buttonContainer.appendChild(reactElement)
 
