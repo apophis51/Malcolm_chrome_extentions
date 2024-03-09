@@ -17,7 +17,8 @@ let myButtons = [
   "UNColor DOM",
   "Deactivate Links",
   "Reactivate Links",
-  "Remove All Injected Buttons"
+  "Remove All Injected Buttons",
+  "Application Tracker",
 ]
 let lastClickedNode = null; // Variable to store the last clicked node
 
@@ -55,8 +56,11 @@ function handleClick(event) {
   var clickedNode = event.target;
 
   ///////////////////////////////////////////// Light Yellow Function
-  clickedNode.style.backgroundColor = 'lightyellow';
-  if (lastClickedNode !== null) {
+
+  if (!(myButtons.includes(clickedNode.textContent)|| clickedNode.className == 'card draggable resizable')) {
+    clickedNode.style.backgroundColor = 'lightyellow';
+  }
+  if (lastClickedNode !== null && lastClickedNode.className !== 'card draggable resizable') {
     lastClickedNode.style.backgroundColor = ''; // Set it to the default or any desired color
   }
   lastClickedNode = clickedNode; // Store the clicked node
@@ -98,8 +102,11 @@ function handleClick(event) {
 
   // Insert the container above the clicked node
   console.log(clickedNode.textContent)
-
-  if (!myButtons.includes(clickedNode.textContent)) {
+  console.log(clickedNode.className)
+  console.log(clickedNode.classList)
+  console.log(clickedNode.parentNode.classList.contains('card'))
+  console.log(clickedNode.closest('card'))
+  if (!myButtons.includes(clickedNode.textContent) && clickedNode.className !== 'card draggable resizable' && !clickedNode.parentNode.classList.contains('card') && !clickedNode.classList.contains('dontTrack')) {
 
     clickedNode.parentNode.insertBefore(buttonContainer, clickedNode);
   }

@@ -1,4 +1,6 @@
 
+import ApplicationTracker from "./ApplicationTracker";
+
 
 export default function navBar() {
 
@@ -40,7 +42,8 @@ export default function navBar() {
 
     return (
         <>
-            <div className="navbar bg-base-100 fixed z-10 gap-10 ">
+            <div className="navbar bg-base-100 fixed z-10 gap-10 dontTrack">
+                <ApplicationTracker />
                 <button className='btn' onClick={() => colorDom('set')}>Color DOM</button>
                 <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button>
                 <button className='btn' onClick={() => linkActivator('set')}>Deactivate Links</button>
