@@ -48,27 +48,33 @@ export default function Buttons({ documentText }) {
   const [exportDataState, setExportDataState] = useAtom(exportData)
   const [postingUrl, setPostingUrl] = useAtom(postingUrlSet)
   console.log(documentText)
- console.log(exportDataState)
-  function handleEvent(event) {
-    // event.preventDefault()
-    console.log('Button clicked')
-  }
+  console.log(exportDataState)
+
 
   function handleData(e) {
+    let highlightedTexted = window.getSelection().toString().trim()
     let KeyName = e.target.textContent
     console.log(e.target.textContent)
     console.log(documentText)
-    if (postingUrl== false) {
+    if (postingUrl == false) {
       setExportDataState((prevData) => ({
         ...prevData,
-        data: { ...prevData.data, Job_Posting_URL: window.location.href}, 
+        data: { ...prevData.data, Job_Posting_URL: window.location.href },
       }))
       setPostingUrl(true)
     }
-    setExportDataState((prevData) => ({
-      ...prevData,
-      data: { ...prevData.data, [KeyName]: documentText }, 
-    }))
+    if (highlightedTexted) {
+      setExportDataState((prevData) => ({
+        ...prevData,
+        data: { ...prevData.data, [KeyName]: highlightedTexted },
+      }))
+    }
+    else {
+      setExportDataState((prevData) => ({
+        ...prevData,
+        data: { ...prevData.data, [KeyName]: documentText },
+      }))
+    }
   }
 
   const randomNumber = Math.random();

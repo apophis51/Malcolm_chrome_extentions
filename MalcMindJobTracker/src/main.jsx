@@ -42,7 +42,7 @@ navInstance.render(
 )
 
 function handleClick(event) {
-
+console.log(window.getSelection().toString().trim())
 
   ///  remove last buttons guard
   if (!myButtons.includes(event.target.textContent) && !event.target.parentNode.classList.contains('dontTrack')){
