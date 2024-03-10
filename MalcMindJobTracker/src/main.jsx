@@ -10,12 +10,12 @@ import ApplicationTracker from './React Components/ApplicationTracker.jsx'
 
 let disabled = false
 
-function disable(){
+function disable() {
   console.log('disabled')
   disabled = true
 }
 
-function enable(){
+function enable() {
   console.log('enabled')
   disabled = false
 }
@@ -49,7 +49,7 @@ let documentBody = document.querySelector('body')
 documentBody.prepend(navDiv)
 navInstance.render(
   <React.StrictMode>
-    <NavBar disable={disable} enable={enable}/>
+    <NavBar disable={disable} enable={enable} />
   </React.StrictMode>,
 )
 
@@ -63,16 +63,16 @@ applicationInstance.render(
 )
 
 function handleClick(event) {
-console.log(window.getSelection().toString().trim())
+  console.log(window.getSelection().toString().trim())
 
   ///  remove last buttons guard
-  if (!myButtons.includes(event.target.textContent) && !event.target.parentNode.classList.contains('dontTrack')){
-  let removeButtons = document.querySelectorAll('.button-container');
-  removeButtons.forEach(function(button) {
+  if (!myButtons.includes(event.target.textContent) && !event.target.parentNode.classList.contains('dontTrack')) {
+    let removeButtons = document.querySelectorAll('.button-container');
+    removeButtons.forEach(function (button) {
       button.remove();
     });
   }
-///// end remove last buttons guard
+  ///// end remove last buttons guard
 
 
   let reactElement = document.createElement('div');
@@ -93,27 +93,27 @@ console.log(window.getSelection().toString().trim())
     if (!element) {
       return false;
     }
-  
+
     // Check if the current element has the specified class
-    try{
-    if (element.classList.contains(className)) {
-      return true;
+    try {
+      if (element.classList.contains(className)) {
+        return true;
+      }
     }
-  }
-    catch{}
-  
+    catch { }
+
     // Recursively check the parent node
     return hasParentWithClass(element.parentNode, className);
   }
   let hasParrentWithClassResult = hasParentWithClass(clickedNode, 'dontTrack')
-console.log(hasParrentWithClassResult)
+  console.log(hasParrentWithClassResult)
   ///End Test Function
 
   ///////////////////////////////////////////// Light Yellow Function
 
-  if (!(myButtons.includes(clickedNode.textContent)|| clickedNode.classList.contains('dontTrack') || hasParrentWithClassResult)) {
-    if (disabled == false){
-    clickedNode.style.backgroundColor = 'lightyellow';
+  if (!(myButtons.includes(clickedNode.textContent) || clickedNode.classList.contains('dontTrack') || hasParrentWithClassResult)) {
+    if (disabled == false) {
+      clickedNode.style.backgroundColor = 'lightyellow';
     }
   }
   console.log(clickedNode.parentNode.classList)
@@ -123,15 +123,15 @@ console.log(hasParrentWithClassResult)
     console.log('triggered')
     lastClickedNode.style.backgroundColor = ''; // Set it to the default or any desired color
   }
-  if (!myButtons.includes(event.target.textContent) &&  !clickedNode.parentNode.classList.contains('dontTrack')){
-  lastClickedNode = clickedNode; // Store the clicked node
-}
+  if (!myButtons.includes(event.target.textContent) && !clickedNode.parentNode.classList.contains('dontTrack')) {
+    lastClickedNode = clickedNode; // Store the clicked node
+  }
   ////////////////////////////////////////////////////////////////////////////////////////////
 
   // Create a container div for the buttons
   var buttonContainer = document.createElement('div');
   buttonContainer.className = 'button-container';
-///////////////////////////////////////// Vanilla Javascript Buttons Function Depreciated
+  ///////////////////////////////////////// Vanilla Javascript Buttons Function Depreciated
   // var buttonRemove = buttonUtils.removeButton(buttonContainer);
   // buttonRemove.style.backgroundColor = 'lightgreen';
   // var button1 = buttonUtils.createButton('Job_Title', clickedNode.textContent);
@@ -167,9 +167,10 @@ console.log(hasParrentWithClassResult)
   console.log(clickedNode.classList)
   console.log(clickedNode.parentNode.classList.contains('card'))
   console.log(clickedNode.closest('card'))
-  if (!myButtons.includes(clickedNode.textContent) && clickedNode.className !== 'card draggable resizable' && !clickedNode.parentNode.classList.contains('card') && !clickedNode.classList.contains('dontTrack')  && !hasParrentWithClassResult) {
-
-    clickedNode.parentNode.insertBefore(buttonContainer, clickedNode);
+  if (!myButtons.includes(clickedNode.textContent) && clickedNode.className !== 'card draggable resizable' && !clickedNode.parentNode.classList.contains('card') && !clickedNode.classList.contains('dontTrack') && !hasParrentWithClassResult) {
+    if (disabled == false) {
+      clickedNode.parentNode.insertBefore(buttonContainer, clickedNode);
+    }
   }
 
 
@@ -189,10 +190,13 @@ console.log(hasParrentWithClassResult)
 
 
   // Add a red border to all children of the clicked node
-  var children = clickedNode.querySelectorAll('*');
-  children.forEach(function (child) {
-    child.style.border = '2px solid red';
-  });
+  if (disabled == false) {
+
+    var children = clickedNode.querySelectorAll('*');
+    children.forEach(function (child) {
+      child.style.border = '2px solid red';
+    });
+  }
 }
 
 // Add a click event listener to the document
