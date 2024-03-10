@@ -9,6 +9,10 @@ import * as buttonUtils from './VanillaUtils/buttonUtils.js';
 
 let myButtons = [
   "Job Title",
+  "Job_Title",
+  "Job_Description",
+  "test",
+  "Title",
   "Company",
   "Description",
   "Save",
@@ -41,10 +45,12 @@ function handleClick(event) {
 
 
   ///  remove last buttons guard
+  if (!myButtons.includes(event.target.textContent) && !event.target.parentNode.classList.contains('dontTrack')){
   let removeButtons = document.querySelectorAll('.button-container');
   removeButtons.forEach(function(button) {
       button.remove();
     });
+  }
 ///// end remove last buttons guard
 
 
@@ -54,36 +60,68 @@ function handleClick(event) {
 
   // Get the target node that was clicked
   var clickedNode = event.target;
+  let documentText = clickedNode.textContent
+
+
+  ///a recursive function that traverses the DOM hierarchy.
+  //gpt prompt how do i search through all parrent nodes in the dom to see if any contains a specific classname?
+
+
+  function hasParentWithClass(element, className) {
+    // Base case: if the element is null or undefined, return false
+    if (!element) {
+      return false;
+    }
+  
+    // Check if the current element has the specified class
+    try{
+    if (element.classList.contains(className)) {
+      return true;
+    }
+  }
+    catch{}
+  
+    // Recursively check the parent node
+    return hasParentWithClass(element.parentNode, className);
+  }
+  let hasParrentWithClassResult = hasParentWithClass(clickedNode, 'dontTrack')
+console.log(hasParrentWithClassResult)
+  ///End Test Function
 
   ///////////////////////////////////////////// Light Yellow Function
 
-  if (!(myButtons.includes(clickedNode.textContent)|| clickedNode.className == 'card draggable resizable')) {
+  if (!(myButtons.includes(clickedNode.textContent)|| clickedNode.classList.contains('dontTrack') || hasParrentWithClassResult)) {
     clickedNode.style.backgroundColor = 'lightyellow';
   }
-  if (lastClickedNode !== null && lastClickedNode.className !== 'card draggable resizable') {
+  console.log(clickedNode.parentNode.classList)
+  console.log(clickedNode.parentNode.classList.contains('card'))
+  console.log(clickedNode.parentNode.classList.contains('dontTrack'))
+  if (lastClickedNode !== null && lastClickedNode.className !== 'card draggable resizable' && !myButtons.includes(event.target.textContent) && !clickedNode.parentNode.classList.contains('card') && !clickedNode.parentNode.classList.contains('dontTrack')) {
+    console.log('triggered')
     lastClickedNode.style.backgroundColor = ''; // Set it to the default or any desired color
   }
+  if (!myButtons.includes(event.target.textContent) &&  !clickedNode.parentNode.classList.contains('dontTrack')){
   lastClickedNode = clickedNode; // Store the clicked node
+}
   ////////////////////////////////////////////////////////////////////////////////////////////
 
-  let documentText = clickedNode.textContent
   // Create a container div for the buttons
   var buttonContainer = document.createElement('div');
   buttonContainer.className = 'button-container';
-///////////////////////////////////////// Vanilla Javascript Buttons Function
-  var buttonRemove = buttonUtils.removeButton(buttonContainer);
-  buttonRemove.style.backgroundColor = 'lightgreen';
-  var button1 = buttonUtils.createButton('Job_Title', clickedNode.textContent);
-  button1.style.backgroundColor = 'lightblue';
-  var button2 = buttonUtils.createButton('Company', clickedNode.textContent);
-  var button3 = buttonUtils.createButton('Job_Description', clickedNode.textContent);
-  let button4 = buttonUtils.saveButton()
-  buttonContainer.appendChild(button1);
-  buttonContainer.appendChild(button2);
-  buttonContainer.appendChild(button3);
-  buttonContainer.appendChild(button4);
+///////////////////////////////////////// Vanilla Javascript Buttons Function Depreciated
+  // var buttonRemove = buttonUtils.removeButton(buttonContainer);
+  // buttonRemove.style.backgroundColor = 'lightgreen';
+  // var button1 = buttonUtils.createButton('Job_Title', clickedNode.textContent);
+  // button1.style.backgroundColor = 'lightblue';
+  // var button2 = buttonUtils.createButton('Company', clickedNode.textContent);
+  // var button3 = buttonUtils.createButton('Job_Description', clickedNode.textContent);
+  // let button4 = buttonUtils.saveButton()
+  // buttonContainer.appendChild(button1);
+  // buttonContainer.appendChild(button2);
+  // buttonContainer.appendChild(button3);
+  // buttonContainer.appendChild(button4);
+  // buttonContainer.appendChild(buttonRemove);
   ////////////////////////////////////////
-  buttonContainer.appendChild(buttonRemove);
   buttonContainer.appendChild(reactElement)
 
 
@@ -91,7 +129,7 @@ function handleClick(event) {
 
   reactInstance.render(
     <React.StrictMode>
-      <Buttons test={documentText} />
+      <Buttons documentText={documentText} />
     </React.StrictMode>,
   )
 
@@ -106,7 +144,7 @@ function handleClick(event) {
   console.log(clickedNode.classList)
   console.log(clickedNode.parentNode.classList.contains('card'))
   console.log(clickedNode.closest('card'))
-  if (!myButtons.includes(clickedNode.textContent) && clickedNode.className !== 'card draggable resizable' && !clickedNode.parentNode.classList.contains('card') && !clickedNode.classList.contains('dontTrack')) {
+  if (!myButtons.includes(clickedNode.textContent) && clickedNode.className !== 'card draggable resizable' && !clickedNode.parentNode.classList.contains('card') && !clickedNode.classList.contains('dontTrack')  && !hasParrentWithClassResult) {
 
     clickedNode.parentNode.insertBefore(buttonContainer, clickedNode);
   }

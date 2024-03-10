@@ -4,6 +4,9 @@
 // import './App.css'
 import React from 'react'
 import '../index.css'
+import { atom, useAtom } from 'jotai'
+import { testAtom, exportData, postingUrlSet } from './Atoms.js'
+
 
 
 import { useRef, useEffect } from 'react';  //new
@@ -39,12 +42,33 @@ import { useRef, useEffect } from 'react';  //new
 // };
 
 
-export default function Buttons({test}) {
-  console.log(test)
+export default function Buttons({ documentText }) {
 
+  const [testState, setTestState] = useAtom(testAtom)
+  const [exportDataState, setExportDataState] = useAtom(exportData)
+  const [postingUrl, setPostingUrl] = useAtom(postingUrlSet)
+  console.log(documentText)
+ console.log(exportDataState)
   function handleEvent(event) {
-    event.preventDefault()
+    // event.preventDefault()
     console.log('Button clicked')
+  }
+
+  function handleData(e) {
+    let KeyName = e.target.textContent
+    console.log(e.target.textContent)
+    console.log(documentText)
+    if (postingUrl== false) {
+      setExportDataState((prevData) => ({
+        ...prevData,
+        data: { ...prevData.data, Job_Posting_URL: window.location.href}, 
+      }))
+      setPostingUrl(true)
+    }
+    setExportDataState((prevData) => ({
+      ...prevData,
+      data: { ...prevData.data, [KeyName]: documentText }, 
+    }))
   }
 
   const randomNumber = Math.random();
@@ -53,9 +77,10 @@ export default function Buttons({test}) {
   return (
     <div key={randomNumber}>
       <div className='flex gap-10 justify-center'>
-       <button className=' btn btn-active btn-accent'>Title</button>
-       <button className='btn'>Company</button>
-       <button className= 'btn' onClick={handleEvent}>Description</button>
+        <button className='btn' onClick={() => setTestState('it worked')}>{testState}</button>
+        <button className=' btn btn-active btn-accent' onClick={(e) => handleData(e)}>Job_Title</button>
+        <button className='btn' onClick={(e) => handleData(e)}>Company</button>
+        <button className='btn' onClick={(e) => handleData(e)}>Job_Description</button>
       </div>
     </div>
   )
