@@ -1,7 +1,25 @@
 
 import ApplicationTracker from "./ApplicationTracker";
 import {useEffect} from 'react';
+import interact from 'interactjs'
 
+
+const position = { x: 0, y: 0 }
+
+interact('.drager').draggable({
+    listeners: {
+        start(event) {
+            console.log(event.type, event.target)
+        },
+        move(event) {
+            position.y += event.dy
+            // position.x += event.dx
+
+            event.target.style.transform =
+                `translate(${position.x}px, ${position.y}px)`
+        },
+    }
+})
 
 export default function navBar() {
 
@@ -47,8 +65,8 @@ export default function navBar() {
 
     return (
         <>
-            <div className="navbar bg-green fixed z-10 gap-10 dontTrack">
-                <ApplicationTracker />
+            <div className="navbar bg-green-500 fixed z-10 gap-10 dontTrack drager">
+                {/* <ApplicationTracker /> */}
                 <button className='btn' onClick={() => colorDom('set')}>Color DOM</button>
                 <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button>
                 <button className='btn' onClick={() => linkActivator('set')}>Deactivate Links</button>

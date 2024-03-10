@@ -5,7 +5,7 @@ import NavBar from './React Components/NavBar.jsx'
 // import './index.css'
 import { createRoot } from 'react-dom/client'
 import * as buttonUtils from './VanillaUtils/buttonUtils.js';
-
+import ApplicationTracker from './React Components/ApplicationTracker.jsx'
 
 let myButtons = [
   "Job Title",
@@ -31,13 +31,20 @@ let lastClickedNode = null; // Variable to store the last clicked node
 
 let navDiv = document.createElement('div');
 let navInstance = createRoot(navDiv)
-
 let documentBody = document.querySelector('body')
 documentBody.prepend(navDiv)
-
 navInstance.render(
   <React.StrictMode>
     <NavBar />
+  </React.StrictMode>,
+)
+
+let applicationDiv = document.createElement('div');
+let applicationInstance = createRoot(applicationDiv)
+documentBody.prepend(applicationDiv)
+applicationInstance.render(
+  <React.StrictMode>
+    <ApplicationTracker />
   </React.StrictMode>,
 )
 
