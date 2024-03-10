@@ -152,7 +152,7 @@ function handleClick(event) {
 
   reactInstance.render(
     <React.StrictMode>
-      <Buttons documentText={documentText} />
+      <Buttons documentText={documentText} disable={disable}/>
     </React.StrictMode>,
   )
 

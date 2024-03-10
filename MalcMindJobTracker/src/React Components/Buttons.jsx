@@ -42,7 +42,7 @@ import { useRef, useEffect } from 'react';  //new
 // };
 
 
-export default function Buttons({ documentText }) {
+export default function Buttons({ documentText,disable }) {
 
   const [testState, setTestState] = useAtom(testAtom)
   const [exportDataState, setExportDataState] = useAtom(exportData)
@@ -88,11 +88,12 @@ export default function Buttons({ documentText }) {
 
   return (
     <div key={randomNumber}>
-      <div className='flex gap-10 justify-center'>
+      <div className='flex flex-wrap gap-5 first-letter:justify-center'>
         <button className=' btn btn-active btn-accent' onClick={(e) => handleData(e)}>Job_Title</button>
         <button className='btn' onClick={(e) => handleData(e)}>Company</button>
         <button className='btn' onClick={(e) => handleData(e)}>Job_Description</button>
         <button className='btn' onClick={deleteButtons}>Remove Buttons</button>
+        <button className='btn' onClick={()=> disable()}>Disable App</button>
       </div>
     </div>
   )
