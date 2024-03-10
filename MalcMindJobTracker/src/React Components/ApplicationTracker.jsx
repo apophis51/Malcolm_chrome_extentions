@@ -82,7 +82,7 @@ export default function ApplicationTracker() {
         };
     };
     return (
-        <div className='ApplicationTracker dontTrack'>
+        <div className='ApplicationTracker dontTrack fixed z-10'>
             <p>
                 {/* {boxPosition.x} {boxPosition.y} */}
             </p>
