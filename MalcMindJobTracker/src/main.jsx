@@ -17,7 +17,7 @@ function disable(){
 
 function enable(){
   console.log('enabled')
-  disabled = flase
+  disabled = false
 }
 
 
@@ -112,7 +112,9 @@ console.log(hasParrentWithClassResult)
   ///////////////////////////////////////////// Light Yellow Function
 
   if (!(myButtons.includes(clickedNode.textContent)|| clickedNode.classList.contains('dontTrack') || hasParrentWithClassResult)) {
+    if (disabled == false){
     clickedNode.style.backgroundColor = 'lightyellow';
+    }
   }
   console.log(clickedNode.parentNode.classList)
   console.log(clickedNode.parentNode.classList.contains('card'))
