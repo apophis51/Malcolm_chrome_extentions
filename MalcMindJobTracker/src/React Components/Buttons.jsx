@@ -50,6 +50,12 @@ export default function Buttons({ documentText }) {
   console.log(documentText)
   console.log(exportDataState)
 
+  function deleteButtons(){
+    let removeButtons = document.querySelectorAll('.button-container');
+    removeButtons.forEach(function(button) {
+        button.remove();
+      });
+  }
 
   function handleData(e) {
     let highlightedTexted = window.getSelection().toString().trim()
@@ -83,10 +89,10 @@ export default function Buttons({ documentText }) {
   return (
     <div key={randomNumber}>
       <div className='flex gap-10 justify-center'>
-        <button className='btn' onClick={() => setTestState('it worked')}>{testState}</button>
         <button className=' btn btn-active btn-accent' onClick={(e) => handleData(e)}>Job_Title</button>
         <button className='btn' onClick={(e) => handleData(e)}>Company</button>
         <button className='btn' onClick={(e) => handleData(e)}>Job_Description</button>
+        <button className='btn' onClick={deleteButtons}>Remove Buttons</button>
       </div>
     </div>
   )
