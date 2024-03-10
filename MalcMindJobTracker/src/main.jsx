@@ -7,6 +7,20 @@ import { createRoot } from 'react-dom/client'
 import * as buttonUtils from './VanillaUtils/buttonUtils.js';
 import ApplicationTracker from './React Components/ApplicationTracker.jsx'
 
+
+let disabled = false
+
+function disable(){
+  console.log('disabled')
+  disabled = true
+}
+
+function enable(){
+  console.log('enabled')
+  disabled = flase
+}
+
+
 let myButtons = [
   "Job Title",
   "Job_Title",
@@ -35,7 +49,7 @@ let documentBody = document.querySelector('body')
 documentBody.prepend(navDiv)
 navInstance.render(
   <React.StrictMode>
-    <NavBar />
+    <NavBar disable={disable} enable={enable}/>
   </React.StrictMode>,
 )
 

@@ -21,7 +21,7 @@ interact('.drager').draggable({
     }
 })
 
-export default function navBar() {
+export default function navBar({disable, enable}) {
 
 
     function colorDom(setUnset) {
@@ -72,6 +72,8 @@ export default function navBar() {
                 <button className='btn' onClick={() => linkActivator('set')}>Deactivate Links</button>
                 <button className='btn' onClick={() => linkActivator('unset')}>Reactivate Links</button>
                 <button className='btn' onClick={() => removeButtons()}>Remove All Injected Buttons</button>
+                <button className='btn' onClick={() => disable()}>Disable</button>
+                <button className='btn' onClick={() => enable()}>Enable</button>
             </div>
             <div className='pt-20'>
             </div>
