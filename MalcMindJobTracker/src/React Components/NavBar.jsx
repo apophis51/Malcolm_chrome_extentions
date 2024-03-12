@@ -60,7 +60,7 @@ export default function navBar({disable, enable}) {
     }
 
     useEffect(() => {
-        linkActivator('set')
+        // linkActivator('set')
     }, [] )
 
     return (

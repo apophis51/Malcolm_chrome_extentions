@@ -203,10 +203,19 @@ function handleClick(event) {
 
   // Disable all links within the clicked node
   if (disabled == false) {
-  var links = clickedNode.querySelectorAll('a');
+    console.log('this is ran')
+  // var links = clickedNode.querySelectorAll('a');
+  var links = document.querySelectorAll('a')
   links.forEach(function (link) {
     link.style.pointerEvents = 'none';
   });
+  }
+  if (disabled == true )
+  {
+    var links = document.querySelectorAll('a')
+    links.forEach(function (link) {
+      link.style.pointerEvents = 'auto';
+    });
   }
   // Reset the background color of other nodes (if any)
   // var allNodes = document.querySelectorAll('*');
@@ -215,7 +224,7 @@ function handleClick(event) {
   //         node.style.backgroundColor = ''; // Reset to default or remove this line to keep the previous background
   //     }
   // });
-
+ console.log(disabled)
 
   // Add a red border to all children of the clicked node
   if (disabled == false) {
