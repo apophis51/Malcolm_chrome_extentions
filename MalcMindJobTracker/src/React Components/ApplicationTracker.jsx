@@ -78,7 +78,9 @@ export default function ApplicationTracker() {
 
     async function submitJobListing() {
         try {
-            const url = "http://localhost:3000/WorkSearchApp/api"
+            // const url = "http://localhost:3000/WorkSearchApp/api"
+            const url = "https://malcmind.com/WorkSearchApp/api"
+
             // let data = {server: "echo me biiatch"}
             let results = await fetch(url, {
                 method: 'POST',
