@@ -10,14 +10,41 @@ import ApplicationTracker from './React Components/ApplicationTracker.jsx'
 
 let disabled = false
 
+if(sessionStorage.getItem('token') == null){
+sessionStorage.setItem('token', 'abc123');
+}
+else{
+  console.log('token already present')
+}
+let storedToken = sessionStorage.getItem('token');
+console.log('sessionStorage:', storedToken);
+
+if(localStorage.getItem('disabled') != null){
+  console.log(localStorage.getItem('disabled'))
+  if(localStorage.getItem('disabled') == "true"){
+    disabled = true
+  }
+  else{
+    disabled = false
+  }
+  console.log(disabled)
+}
+console.log("disabled status", disabled)
+console.log('localStorage:',  localStorage.getItem('disabled'))
+
 function disable() {
   console.log('disabled')
   disabled = true
+  localStorage.setItem('disabled', "true")
+  console.log('localStorage:', localStorage.getItem('disabled'))
 }
 
 function enable() {
   console.log('enabled')
   disabled = false
+  localStorage.setItem('disabled', "false")
+  console.log('localStorage:', localStorage.getItem('disabled'))
+ console.log(disabled)
 }
 
 
@@ -175,11 +202,12 @@ function handleClick(event) {
 
 
   // Disable all links within the clicked node
+  if (disabled == false) {
   var links = clickedNode.querySelectorAll('a');
   links.forEach(function (link) {
     link.style.pointerEvents = 'none';
   });
-
+  }
   // Reset the background color of other nodes (if any)
   // var allNodes = document.querySelectorAll('*');
   // allNodes.forEach(function(node) {
