@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import interact from 'interactjs'
+import AppConfig from '../AppConfig'
 
 import { atom, useAtom } from 'jotai'
 import { testAtom, exportData } from './Atoms.js'
@@ -37,13 +38,23 @@ export default function ApplicationTracker() {
     console.log(webSocketData)
 
     //he socket && part in the condition is a defensive check to make sure that socket is not null or undefined. Without this check, if socket is null (for example, during the initial render before the WebSocket connection is established), attempting to access socket.readyState would result in an error, causing your application to crash.
-    if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: 'message', data: 'whatup' }));
+    // if (socket && socket.readyState === WebSocket.OPEN) {
+    //     socket.send(JSON.stringify({ type: 'message', data: 'whatup' }));
+    // }
+
+
+    
+
+    function pingserver() {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: 'ping', data: 'ping' }));
+        }
     }
     useEffect(() => {
         // const ws = new WebSocket('ws://localhost:3532');
-        const ws = new WebSocket('wss://cryptoai-production.up.railway.app');
+        const ws = new WebSocket(AppConfig().WebSocket);
         setSocket(ws);
+        
         // ws.send(JSON.stringify({ type: 'message', data: 'whatup' }));
         // Handle incoming messages
         ws.onmessage = (event) => {
@@ -80,7 +91,7 @@ export default function ApplicationTracker() {
         try {
             // const url = "http://localhost:3000/WorkSearchApp/api"
             const url = "https://malcmind.com/WorkSearchApp/api"
-
+console.log(exportDataState)
             // let data = {server: "echo me biiatch"}
             let results = await fetch(url, {
                 method: 'POST',
@@ -90,6 +101,7 @@ export default function ApplicationTracker() {
                 },
                 body: JSON.stringify(exportDataState) // Convert the data to a JSON string
             })
+            
             const data = await results.json(); // Note the additional 'await' here
             if (socket && socket.readyState === WebSocket.OPEN) {
                 socket.send(JSON.stringify({ type: 'jobmessage', data: exportDataState }));
@@ -129,6 +141,7 @@ export default function ApplicationTracker() {
             // onMouseUp={handleMouseUp}
             // onMouseMove={handleMouseMove}
             >
+                <button className= 'btn' onClick={pingserver}>ping server</button>
                 <p>Application Tracker</p>
                 <button className='btn' onClick={submitJobListing}>
                     SubmitJob Listing

@@ -3,6 +3,7 @@
     "name": "MalcMind JobExtention",
     "version": "1.0",
     "description": "Job Parser",
+    "permissions": ["storage", "activeTab", "scripting"],
     "content_scripts": [
       {
         "js": ["dist/output.js"],

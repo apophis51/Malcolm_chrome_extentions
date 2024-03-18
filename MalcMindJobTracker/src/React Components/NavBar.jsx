@@ -1,7 +1,8 @@
 
 import ApplicationTracker from "./ApplicationTracker";
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import interact from 'interactjs'
+import AppConfig from '../AppConfig'
 
 
 const position = { x: 0, y: 0 }
@@ -21,7 +22,7 @@ interact('.drager').draggable({
     }
 })
 
-export default function navBar({disable, enable}) {
+export default function navBar({ disable, enable }) {
 
 
     function colorDom(setUnset) {
@@ -38,7 +39,7 @@ export default function navBar({disable, enable}) {
         }
     }
 
-    function linkActivator(setUnset){
+    function linkActivator(setUnset) {
         var links = document.querySelectorAll('a');
         if (setUnset == 'set') {
             links.forEach(function (link) {
@@ -52,21 +53,50 @@ export default function navBar({disable, enable}) {
         }
     }
 
-    function removeButtons(){
+    function removeButtons() {
         let buttonContainer = document.querySelectorAll('.button-container');
-        buttonContainer.forEach(function(button) {
+        buttonContainer.forEach(function (button) {
             button.remove();
-          });
+        });
+    }
+
+    function activateHandler() {
+        console.log('activateHandler')
+        // let tempurl = AppConfig().Url
+        // let tempurl = 'http://localhost:3000/WorkSearchApp/api'
+        let tempurl = 'http://localhost:3000/WorkSearchApp/Authorize/api'
+        // window.location.href = AppConfig().Url;
+        fetch(tempurl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'SDFDFGHSSDFDF',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                // Handle successful response
+                window.location.href = AppConfig().Url; // Redirect the user
+            } else {
+                // Handle error response
+                window.location.href = AppConfig().Url; // Redirect the user
+
+            }
+        })
+        .catch(error => {
+            // Handle errors
+        });
     }
 
     useEffect(() => {
         // linkActivator('set')
-    }, [] )
+    }, [])
 
     return (
         <>
             <div className="navbar bg-green-500 fixed z-10 gap-10 dontTrack drager">
                 {/* <ApplicationTracker /> */}
+                <p>Test Tag {AppConfig.devUrl}</p>
                 <button className='btn' onClick={() => colorDom('set')}>Color DOM</button>
                 <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button>
                 <button className='btn' onClick={() => linkActivator('set')}>Deactivate Links</button>
@@ -74,6 +104,9 @@ export default function navBar({disable, enable}) {
                 <button className='btn' onClick={() => removeButtons()}>Remove All Injected Buttons</button>
                 <button className='btn' onClick={() => disable()}>Disable</button>
                 <button className='btn' onClick={() => enable()}>Enable</button>
+                {/* <button className='btn'><a href= 'http://localhost:3000/WorkSearchApp/Authorize' >Activate</a></button> */}
+                <button className='btn' onClick={activateHandler}>Activate</button>
+
             </div>
             <div className='pt-20'>
             </div>
