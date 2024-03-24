@@ -60,41 +60,49 @@ export default function navBar({ disable, enable }) {
         });
     }
 
-    function activateHandler() {
-        console.log('activateHandler')
-        // let tempurl = AppConfig().Url
-        // let tempurl = 'http://localhost:3000/WorkSearchApp/api'
-        let tempurl = 'http://localhost:3000/WorkSearchApp/Authorize/api'
-        // window.location.href = AppConfig().Url;
-        fetch(tempurl, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'SDFDFGHSSDFDF',
-            },
-        })
-        .then(response => {
-            if (response.ok) {
-                // Handle successful response
-                window.location.href = AppConfig().Url; // Redirect the user
-            } else {
-                // Handle error response
-                window.location.href = AppConfig().Url; // Redirect the user
+    // function activateHandler() {
+    //     let activationURL = new url(`http://localhost:3000/WorkSearchApp/Authorize/api`)
+    //     const params = new URLSearchParams();
+    //     params.append('id', 'value1');
+    //     activationURL.search = params.toString();
+    //     console.log('activateHandler')
+    //     // let tempurl = AppConfig().Url
+    //     // let tempurl = 'http://localhost:3000/WorkSearchApp/api'
+    //     let tempurl = `http://localhost:3000/WorkSearchApp/Authorize/api?id=fsfdf`
+    //     // window.location.href = AppConfig().Url;
+    //     fetch(activationURL, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': 'SDFDFGHSSDFDF',
+    //         },
+    //     })
+    //         .then(response => {
+    //             if (response.ok) {
+    //                 // Handle successful response
+    //                 window.location.href = AppConfig().Url; // Redirect the user
+    //             } else {
+    //                 // Handle error response
+    //                 window.location.href = AppConfig().Url; // Redirect the user
 
-            }
-        })
-        .catch(error => {
-            // Handle errors
-        });
+    //             }
+    //         })
+    //         .catch(error => {
+    //             // Handle errors
+    //         });
+    // }
+
+    async function handleURL() {
+        let myID = await AppConfig().idStatus()
+        window.location.href = AppConfig().Url(myID)
     }
-
     useEffect(() => {
         // linkActivator('set')
     }, [])
 
     return (
         <>
-            <div className="navbar bg-green-500 fixed z-10 gap-10 dontTrack drager">
+            <div className="navbar bg-green-500 fixed z-[2000] gap-10 dontTrack drager">
                 {/* <ApplicationTracker /> */}
                 <p>Test Tag {AppConfig.devUrl}</p>
                 <button className='btn' onClick={() => colorDom('set')}>Color DOM</button>
@@ -105,7 +113,9 @@ export default function navBar({ disable, enable }) {
                 <button className='btn' onClick={() => disable()}>Disable</button>
                 <button className='btn' onClick={() => enable()}>Enable</button>
                 {/* <button className='btn'><a href= 'http://localhost:3000/WorkSearchApp/Authorize' >Activate</a></button> */}
-                <button className='btn' onClick={activateHandler}>Activate</button>
+                {/* <button className='btn' onClick={activateHandler}>Activate</button> */}
+                <button className='btn' onClick={handleURL}>Activate</button>
+
 
             </div>
             <div className='pt-20'>

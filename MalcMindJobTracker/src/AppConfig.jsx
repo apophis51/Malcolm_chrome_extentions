@@ -16,17 +16,27 @@
 //   return hash.digest('hex');
 // }
 async function generateId(){
-  let data = await fetch('http://localhost:3000/WorkSearchApp/Authorize/api')
+  let website = AppConfig().idGeneratorURL
+  console.log(website)
+  try{
+  let data = await fetch(website)
   data = await data.json()
+  console.log(data)
+  await AppConfig().storeID(data.hash)
   return data.hash
-}
+  }
+  catch(error){
+    console.error('failed to fetch in generateID',error)
+  }
 
-export default function AppConfig(mode = 'local') {
+}
+export default function AppConfig(mode = 'production') {
   if (mode == 'local') {
     console.log(localStorage.getItem('disabled'))
     return {
-      Url: 'http://localhost:3000/WorkSearchApp/Authorize',
+      Url: ((id) => `http://localhost:3000/WorkSearchApp/Authorize?id=${id}`),
       WebSocket: 'ws://localhost:3532',
+      jobApiURL: 'http://localhost:3000/WorkSearchApp/api',
       storageDisableTrue: (() => localStorage.setItem('disabled', "true")),
       storageDisableFalse: (() => localStorage.setItem('disabled', "false")),
       storageStatus: (() => localStorage.getItem('disabled')),
@@ -34,13 +44,16 @@ export default function AppConfig(mode = 'local') {
       idStatus: (() => localStorage.getItem('id')),
       clearStorage: (() => localStorage.clear()),
       storeID: ((id) => localStorage.setItem('id', id)),
+      idGeneratorURL: 'http://localhost:3000/WorkSearchApp/Authorize/api',
       generateID: (() => generateId()),
     };
   }
-  if (mode == 'production') {
+  if (mode == 'custom') {
+    console.log(localStorage.getItem('disabled'))
     return {
-      Url: 'https://malcmind.com',
-      WebSocket: 'wss://cryptoai-production.up.railway.app',
+      Url: ((id) => `http://localhost:3000/WorkSearchApp/Authorize?id=${id}`),
+      WebSocket: 'ws://localhost:3532',
+      jobApiURL: 'http://localhost:3000/WorkSearchApp/api',
       storageDisableTrue: (() => chrome.storage.local.set({ 'disabled': "true" })),
       storageDisableFalse: (() => chrome.storage.local.set({ 'disabled': "false" })),
       storageStatus: ((() => chrome.storage.local.get('disabled').then((result) => { return result.disabled; }))),
@@ -48,6 +61,23 @@ export default function AppConfig(mode = 'local') {
       idStatus: (() => chrome.storage.local.get('id').then((result) => { return result.id; })),
       clearStorage: (() => chrome.storage.local.clear()),
       storeID: ((id) => chrome.storage.local.set({ 'id': id })),
+      idGeneratorURL: 'http://localhost:3000/WorkSearchApp/Authorize/api',
+      generateID: (() => generateId()),
+    };
+  }
+  if (mode == 'production') {
+    return {
+      Url: ((id) => `https://malcmind.com/WorkSearchApp/Authorize?id=${id}`),
+      WebSocket: 'wss://cryptoai-production.up.railway.app',
+      jobApiURL: 'https://malcmind.com/WorkSearchApp/api',
+      storageDisableTrue: (() => chrome.storage.local.set({ 'disabled': "true" })),
+      storageDisableFalse: (() => chrome.storage.local.set({ 'disabled': "false" })),
+      storageStatus: ((() => chrome.storage.local.get('disabled').then((result) => { return result.disabled; }))),
+      // storageSaveId: (() => chrome.storage.local.set({ 'id': generateId() })),
+      idStatus: (() => chrome.storage.local.get('id').then((result) => { return result.id; })),
+      clearStorage: (() => chrome.storage.local.clear()),
+      storeID: ((id) => chrome.storage.local.set({ 'id': id })),
+      idGeneratorURL: 'https://malcmind.com/WorkSearchApp/Authorize/api',
       generateID: (() => generateId()),
 
     };

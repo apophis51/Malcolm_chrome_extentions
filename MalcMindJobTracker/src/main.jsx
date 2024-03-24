@@ -11,6 +11,7 @@ import AppConfig from './AppConfig.jsx';
 
 async function main() {
 
+
   let disabled = false
 
   if (sessionStorage.getItem('token') == null) {
@@ -22,39 +23,34 @@ async function main() {
   let storedToken = sessionStorage.getItem('token');
   console.log('sessionStorage:', storedToken);
 
-let storageStatus  = await AppConfig().storageStatus()  //
-let storageStatusID = await AppConfig().idStatus()  //
-console.log('Storage Status', storageStatus)
-console.log('Storage Status ID', storageStatusID)
+  let storageStatus = await AppConfig().storageStatus()  //
+  let storageStatusID = await AppConfig().idStatus()  //
+  console.log('Storage Status', storageStatus)
+  console.log('Storage Status ID', storageStatusID)
+  console.log('checkpoint1')
 
-
-if(storageStatusID == undefined){
-  let myID = await AppConfig().generateID()  //
-  AppConfig().storeID(myID)
-}
-if(storageStatusID == undefined){
-  let dogcollar = await fetch('http://localhost:3000/WorkSearchApp/Authorize/api')
-  console.log(await dogcollar.json())
-  console.log('route hit')
-  let IDresult = await AppConfig().generateID()  //
-  console.log(IDresult)
-}
-// if(storageStatusID)
-// {
-//   await AppConfig().clearStorage()  //
-// }
+  try {
+    if (storageStatusID == undefined) {
+      await AppConfig().generateID()
+      console.log(await AppConfig().idStatus())
+    }
+  }
+  catch { console.log('generateID failed') }
+  // if(storageStatusID)
+  // {
+  //   await AppConfig().clearStorage()  //
+  // }
 
 
 
 
 
 
-
-
+  console.log('checkpoint2')
 
   if (storageStatus != undefined) {
     // if (storageStatus == "true" || storageStatus.disabled == "true") {
-      if (storageStatus == "true") {
+    if (storageStatus == "true") {
 
       disabled = true
     }
@@ -63,6 +59,7 @@ if(storageStatusID == undefined){
     }
   }
   console.log("disabled status", disabled)
+  console.log('checkpoint3')
 
   async function disable() {
     console.log('disabled')
