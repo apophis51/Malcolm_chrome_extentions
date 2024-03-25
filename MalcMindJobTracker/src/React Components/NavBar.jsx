@@ -7,6 +7,7 @@ import AppConfig from '../AppConfig'
 
 const position = { x: 0, y: 0 }
 
+//This Function is for dragging the nav bar up and down on the y axis
 interact('.drager').draggable({
     listeners: {
         start(event) {
@@ -14,8 +15,6 @@ interact('.drager').draggable({
         },
         move(event) {
             position.y += event.dy
-            // position.x += event.dx
-
             event.target.style.transform =
                 `translate(${position.x}px, ${position.y}px)`
         },
@@ -103,7 +102,6 @@ export default function navBar({ disable, enable }) {
     return (
         <>
             <div className="navbar bg-green-500 fixed z-[2000] gap-10 dontTrack drager">
-                {/* <ApplicationTracker /> */}
                 <p>Test Tag {AppConfig.devUrl}</p>
                 <button className='btn' onClick={() => colorDom('set')}>Color DOM</button>
                 <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button>
@@ -112,8 +110,6 @@ export default function navBar({ disable, enable }) {
                 <button className='btn' onClick={() => removeButtons()}>Remove All Injected Buttons</button>
                 <button className='btn' onClick={() => disable()}>Disable</button>
                 <button className='btn' onClick={() => enable()}>Enable</button>
-                {/* <button className='btn'><a href= 'http://localhost:3000/WorkSearchApp/Authorize' >Activate</a></button> */}
-                {/* <button className='btn' onClick={activateHandler}>Activate</button> */}
                 <button className='btn' onClick={handleURL}>Activate</button>
 
 

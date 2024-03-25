@@ -140,7 +140,7 @@ export default function ApplicationTracker() {
             // left: boxPosition.x,
             bottom: '10vh',
             right: '10vw',
-            backgroundColor: 'red',
+            // backgroundColor: 'red',
             minHeight: '400px',
             maxHeight: '400px',
             maxWidth: '300px',
@@ -153,7 +153,7 @@ export default function ApplicationTracker() {
                 {/* {boxPosition.x} {boxPosition.y} */}
             </p>
             <div
-                className="card draggable resizable dontTrack"
+                className="card draggable resizable dontTrack bg-green-300"
                 style={{
                     position: 'fixed',
                     ...handleStyle(),
@@ -168,7 +168,7 @@ export default function ApplicationTracker() {
                     SubmitJob Listing
                 </button>
                 <h1>Data Display</h1>
-                <ul>
+                <ul className = 'overflow-y-scroll'>
                     {Object.entries(exportDataState.data).map(([key, value]) => (
                         <li key={key}>
                             <strong>{key}:</strong> {value}
