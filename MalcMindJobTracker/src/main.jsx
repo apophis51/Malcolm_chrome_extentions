@@ -2,7 +2,6 @@ import React from 'react'
 // import ReactDOM from 'react-dom/client'
 import Buttons from './React Components/Buttons.jsx'
 import NavBar from './React Components/NavBar.jsx'
-// import './index.css'
 import { createRoot } from 'react-dom/client'
 import * as buttonUtils from './VanillaUtils/buttonUtils.js';
 import ApplicationTracker from './React Components/ApplicationTracker.jsx'
@@ -23,11 +22,10 @@ async function main() {
   let storedToken = sessionStorage.getItem('token');
   console.log('sessionStorage:', storedToken);
 
-  let storageStatus = await AppConfig().storageStatus()  //
+  let disableStatus = await AppConfig().disableStatus()  //
   let storageStatusID = await AppConfig().idStatus()  //
-  console.log('Storage Status', storageStatus)
+  console.log('Disabled Status', disableStatus)
   console.log('Storage Status ID', storageStatusID)
-  console.log('checkpoint1')
 
   try {
     if (storageStatusID == undefined) {
@@ -48,9 +46,9 @@ async function main() {
 
   console.log('checkpoint2')
 
-  if (storageStatus != undefined) {
-    // if (storageStatus == "true" || storageStatus.disabled == "true") {
-    if (storageStatus == "true") {
+  if (disableStatus != undefined) {
+    // if (disableStatus == "true" || disableStatus.disabled == "true") {
+    if (disableStatus == "true") {
 
       disabled = true
     }
@@ -65,14 +63,14 @@ async function main() {
     console.log('disabled')
     disabled = true
     await AppConfig().storageDisableTrue()  //
-    console.log('localStorage:', storageStatus)
+    console.log('localStorage:', disableStatus)
   }
 
   async function enable() {
     console.log('enabled')
     disabled = false
     await AppConfig().storageDisableFalse() //
-    console.log('localStorage:', storageStatus)
+    console.log('localStorage:', disableStatus)
     console.log(disabled)
   }
 
@@ -86,8 +84,6 @@ async function main() {
     "Description",
     "Save",
     "Remove Buttons",
-    "Color DOM",
-    "UNColor DOM",
     "Deactivate Links",
     "Reactivate Links",
     "Remove All Injected Buttons",
@@ -148,7 +144,6 @@ async function main() {
       if (!element) {
         return false;
       }
-
       // Check if the current element has the specified class
       try {
         if (element.classList.contains(className)) {
@@ -161,9 +156,8 @@ async function main() {
       return hasParentWithClass(element.parentNode, className);
     }
     let hasParrentWithClassResult = hasParentWithClass(clickedNode, 'dontTrack')
-    console.log(hasParrentWithClassResult)
+    console.log('track node', hasParrentWithClassResult)
     ///End Test Function
-
     ///////////////////////////////////////////// Light Yellow Function
 
     if (!(myButtons.includes(clickedNode.textContent) || clickedNode.classList.contains('dontTrack') || hasParrentWithClassResult)) {
@@ -196,8 +190,6 @@ async function main() {
     // let button4 = buttonUtils.saveButton()
     // buttonContainer.appendChild(button1);
     // buttonContainer.appendChild(button2);
-    // buttonContainer.appendChild(button3);
-    // buttonContainer.appendChild(button4);
     // buttonContainer.appendChild(buttonRemove);
     ////////////////////////////////////////
     buttonContainer.appendChild(reactElement)
@@ -229,7 +221,7 @@ async function main() {
     }
 
 
-    // Disable all links within the clicked node
+    // Disable all links within the document
     if (disabled == false) {
       console.log('this is ran')
       // var links = clickedNode.querySelectorAll('a');
@@ -244,6 +236,34 @@ async function main() {
         link.style.pointerEvents = 'auto';
       });
     }
+
+
+    if (disabled == false) {
+      console.log('triggered')
+      let children = document.querySelectorAll('*');
+      children.forEach(function (child) {
+        child.addEventListener('mouseenter', function () {
+          child.style.boxShadow = '0 0 10px rgba(0, 0, 700, 0.6)'; // Apply box shadow on hover
+        });
+        child.addEventListener('mouseleave', function () {
+          child.style.boxShadow = 'none'; // Remove box shadow when not hovering
+        });
+      });
+
+    }
+    if (disabled == true) {
+      let children = document.querySelectorAll('*');
+      children.forEach(function (child) {
+        child.style.border = '';
+        child.addEventListener('mouseenter', function () {
+          child.style.boxShadow = 'none';
+        });
+      });
+    }
+
+
+
+
     // Reset the background color of other nodes (if any)
     // var allNodes = document.querySelectorAll('*');
     // allNodes.forEach(function(node) {
@@ -253,18 +273,26 @@ async function main() {
     // });
     console.log(disabled)
 
-    // Add a red border to all children of the clicked node
-    if (disabled == false) {
+    // Add a red border to all children of the clicked node unless we don't want to track that node
+    // if (disabled == false && !clickedNode.classList.contains('dontTrack') && !hasParrentWithClassResult){
+    //   var children = clickedNode.querySelectorAll('*');
+    //   children.forEach(function (child) {
+    //     child.style.border = '1px solid black';
 
-      var children = clickedNode.querySelectorAll('*');
-      children.forEach(function (child) {
-        child.style.border = '2px solid red';
-      });
-    }
+
+    //     child.addEventListener('mouseenter', function() {
+    //       child.style.boxShadow = '0 0 10px rgba(0, 0, 600, 0.6)'; // Apply box shadow on hover
+    //   });
+    //   child.addEventListener('mouseleave', function() {
+    //       child.style.boxShadow = 'none'; // Remove box shadow when not hovering
+    //   });
+    //   });
+    // }
   }
 
   // Add a click event listener to the document
   document.addEventListener('click', handleClick);
+
 
 
 

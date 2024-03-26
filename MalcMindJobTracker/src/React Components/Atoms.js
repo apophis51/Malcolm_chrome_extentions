@@ -21,7 +21,6 @@ console.log('Current Date:', formattedDate);
 export const exportedDate =  atom(formattedDate) 
 
 
-export const testAtom = atom('test')
 
 export const exportData = atom({data: {Job_Title: 'test Title', Applied_Date: formattedDate}})
 

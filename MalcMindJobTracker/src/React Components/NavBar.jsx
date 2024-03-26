@@ -28,12 +28,27 @@ export default function navBar({ disable, enable }) {
         var children = document.querySelectorAll('*');
         if (setUnset == 'set') {
             children.forEach(function (child) {
-                child.style.border = '2px solid red';
+                // child.style.border = '1px solid black';
+
+                child.addEventListener('mouseenter', function() {
+                    child.style.boxShadow = '0 0 10px rgba(0, 0, 700, 0.6)'; // Apply box shadow on hover
+                });
+                child.addEventListener('mouseleave', function() {
+                    child.style.boxShadow = 'none'; // Remove box shadow when not hovering
+                });
             });
+            
         }
         if (setUnset == 'unset') {
             children.forEach(function (child) {
                 child.style.border = '';
+                
+                // child.removeEventListener('mouseenter', function() {
+                //     child.style.boxShadow = '0 0 10px rgba(0, 0, 700, 0.6)'; // Apply box shadow on hover
+                // });
+                child.addEventListener('mouseenter', function() {
+                    child.style.boxShadow = 'none'; // Apply box shadow on hover
+                });
             });
         }
     }
@@ -96,18 +111,29 @@ export default function navBar({ disable, enable }) {
         window.location.href = AppConfig().Url(myID)
     }
     useEffect(() => {
+        console.log('nav useffect triggered')
         // linkActivator('set')
+        // disabler()
+        // async function disabler(){
+        //     if (AppConfig().disableStatus() == 'true'){
+        //         colorDom('set')
+        //     }
+        //     else {
+        //         colorDom('unset')
+        //     }
+        // }
+        
     }, [])
 
     return (
         <>
             <div className="navbar bg-green-500 fixed z-[2000] gap-10 dontTrack drager">
-                <p>Test Tag {AppConfig.devUrl}</p>
-                <button className='btn' onClick={() => colorDom('set')}>Color DOM</button>
-                <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button>
-                <button className='btn' onClick={() => linkActivator('set')}>Deactivate Links</button>
-                <button className='btn' onClick={() => linkActivator('unset')}>Reactivate Links</button>
-                <button className='btn' onClick={() => removeButtons()}>Remove All Injected Buttons</button>
+                <h2>Work Search App</h2>
+                {/* <button className='btn' onClick={() => colorDom('set')}>Color DOM</button> */}
+                {/* <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button> */}
+                {/* <button className='btn' onClick={() => linkActivator('set')}>Deactivate Links</button> */}
+                {/* <button className='btn' onClick={() => linkActivator('unset')}>Reactivate Links</button> */}
+                {/* <button className='btn' onClick={() => removeButtons()}>Remove All Injected Buttons</button> */}
                 <button className='btn' onClick={() => disable()}>Disable</button>
                 <button className='btn' onClick={() => enable()}>Enable</button>
                 <button className='btn' onClick={handleURL}>Activate</button>

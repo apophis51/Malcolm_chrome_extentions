@@ -5,7 +5,7 @@
 import React from 'react'
 import '../index.css'
 import { atom, useAtom } from 'jotai'
-import { testAtom, exportData, postingUrlSet } from './Atoms.js'
+import {  exportData, postingUrlSet } from './Atoms.js'
 
 
 
@@ -44,7 +44,6 @@ import { useRef, useEffect } from 'react';  //new
 
 export default function Buttons({ documentText,disable }) {
 
-  const [testState, setTestState] = useAtom(testAtom)
   const [exportDataState, setExportDataState] = useAtom(exportData)
   const [postingUrl, setPostingUrl] = useAtom(postingUrlSet)
   console.log(documentText)

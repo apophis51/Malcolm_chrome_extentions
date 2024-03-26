@@ -3,7 +3,7 @@ import interact from 'interactjs'
 import AppConfig from '../AppConfig'
 
 import { atom, useAtom } from 'jotai'
-import { testAtom, exportData } from './Atoms.js'
+import { exportData } from './Atoms.js'
 
 const position = { x: 0, y: 0 }
 
@@ -26,14 +26,9 @@ interact('.draggable').draggable({
 
 
 export default function ApplicationTracker() {
-    const [count, setCount] = useState(0);
-    const [isMoving, setIsMoving] = useState(false);
-    const [boxPosition, setBoxPosition] = useState({ x: 0, y: 0 });
-    const [testState, setTestState] = useAtom(testAtom)
     const [exportDataState, setExportDataState] = useAtom(exportData)
-
     const [socket, setSocket] = useState(null);
-    const [webSocketData, setWebSocketData] = useState(null);
+    // const [webSocketData, setWebSocketData] = useState(null);
     const socketData = useRef(null)
 
     // console.log(webSocketData)
@@ -77,31 +72,8 @@ export default function ApplicationTracker() {
     }, []);
 
 
-
-
-
-    const handleMouseDown = (event) => {
-        setIsMoving(true);
-    };
-
-    const handleMouseUp = (event) => {
-        setIsMoving(false);
-    };
-
-    const handleMouseMove = (event) => {
-        if (isMoving) {
-            setBoxPosition({
-                x: event.clientX + window.scrollX,
-                y: event.clientY + window.scrollY,
-            });
-        }
-    };
-
     async function submitJobListing() {
         try {
-            // const url = "http://localhost:3000/WorkSearchApp/api"
-            // const url = "https://malcmind.com/WorkSearchApp/api"
-
             const url = AppConfig().jobApiURL
             console.log(exportDataState)
             let extentionIdentifier = await AppConfig().idStatus()
@@ -148,35 +120,30 @@ export default function ApplicationTracker() {
         };
     };
     return (
-        <div className='ApplicationTracker dontTrack fixed z-[1999]'>
+        <div className='ApplicationTracker dontTrack fixed z-[1999] outline'>
+            
             <p>
                 {/* {boxPosition.x} {boxPosition.y} */}
             </p>
             <div
-                className="card draggable resizable dontTrack bg-green-300"
+                className="card draggable resizable dontTrack bg-green-700 text-white border-2 border-green-900 " 
                 style={{
                     position: 'fixed',
                     ...handleStyle(),
-                }}
-            // onMouseDown={handleMouseDown}
-            // onMouseUp={handleMouseUp}
-            // onMouseMove={handleMouseMove}
-            >
-                <button className='btn' onClick={pingserver}>ping server</button>
-                <p>Application Tracker</p>
-                <button className='btn' onClick={submitJobListing}>
-                    SubmitJob Listing
+                }}>
+                <p className="flex justify-center text-xl bg-slate-600 rounded-lg">Application Tracker</p>
+                <h1 className='text-xl flex justify-center bg-slate-600'>Data Display</h1>
+                <button className='btn btn-sm bg-red-200' onClick={submitJobListing}>
+                    Submit Job Data
                 </button>
-                <h1>Data Display</h1>
-                <ul className = 'overflow-y-scroll'>
+                <ul className = 'overflow-y-scroll divide-y-2 p-2'>
                     {Object.entries(exportDataState.data).map(([key, value]) => (
                         <li key={key}>
                             <strong>{key}:</strong> {value}
                         </li>
                     ))}
                 </ul>
-                <p>{testState}</p>
-                {exportDataState.data.Job_Title}
+                {/* {exportDataState.data.Job_Title} */}
             </div>
         </div>
     );
