@@ -22,6 +22,8 @@ export const exportedDate =  atom(formattedDate)
 
 
 
-export const exportData = atom({data: {Job_Title: 'test Title', Applied_Date: formattedDate}})
+export const exportData = atom({data: {Job_Title: 'Click on a Job Posting Title to Add a Title', Applied_Date: formattedDate, Company: 'Click on a Company Name to Add a Company', Job_Description: 'Click on a Job Description to Add a Description',}})
 
 export const postingUrlSet = atom(false)
+
+export const loggedIn = atom(false)

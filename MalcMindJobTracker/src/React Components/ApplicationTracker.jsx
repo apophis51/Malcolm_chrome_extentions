@@ -3,7 +3,7 @@ import interact from 'interactjs'
 import AppConfig from '../AppConfig'
 
 import { atom, useAtom } from 'jotai'
-import { exportData } from './Atoms.js'
+import { exportData, loggedIn } from './Atoms.js'
 
 const position = { x: 0, y: 0 }
 
@@ -28,9 +28,11 @@ interact('.draggable').draggable({
 export default function ApplicationTracker() {
     const [exportDataState, setExportDataState] = useAtom(exportData)
     const [socket, setSocket] = useState(null);
+    const [LoggedIn, setLoggedIn] = useAtom(loggedIn)
     // const [webSocketData, setWebSocketData] = useState(null);
     const socketData = useRef(null)
 
+   
     // console.log(webSocketData)
 
     //he socket && part in the condition is a defensive check to make sure that socket is not null or undefined. Without this check, if socket is null (for example, during the initial render before the WebSocket connection is established), attempting to access socket.readyState would result in an error, causing your application to crash.
@@ -46,9 +48,6 @@ export default function ApplicationTracker() {
         }
     }
     useEffect(() => {
-        // const ws = new WebSocket('ws://localhost:3532');
-
-
         const ws = new WebSocket(AppConfig().WebSocket);
         setSocket(ws);
 
@@ -57,8 +56,6 @@ export default function ApplicationTracker() {
             ws.send(JSON.stringify({ type: 'id', data: AppConfig().idStatus() }));
         };
 
-
-        // ws.send(JSON.stringify({ type: 'message', data: 'whatup' }));
         // Handle incoming messages
         ws.onmessage = (event) => {
             const newData = JSON.parse(event.data);
@@ -69,16 +66,18 @@ export default function ApplicationTracker() {
         return () => {
             ws.close();
         };
-    }, []);
+    }, [LoggedIn]);
 
 
     async function submitJobListing() {
+        if(LoggedIn === false){
+            return null
+        }
         try {
             const url = AppConfig().jobApiURL
             console.log(exportDataState)
             let extentionIdentifier = await AppConfig().idStatus()
             console.log("sending with auth id", extentionIdentifier)
-            // let data = {server: "echo me biiatch"}
             let results = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -91,6 +90,7 @@ export default function ApplicationTracker() {
 
             const data = await results.json(); // Note the additional 'await' here
             if (socket && socket.readyState === WebSocket.OPEN) {
+                console.log('triggered')
                 socket.send(JSON.stringify({ type: 'jobmessage', data: exportDataState }));
             }
             if (data.information) {
@@ -119,6 +119,7 @@ export default function ApplicationTracker() {
             minWidth: '300px',
         };
     };
+    console.log(LoggedIn)
     return (
         <div className='ApplicationTracker dontTrack fixed z-[1999] outline'>
             
@@ -134,8 +135,9 @@ export default function ApplicationTracker() {
                 <p className="flex justify-center text-xl bg-slate-600 rounded-lg">Application Tracker</p>
                 <h1 className='text-xl flex justify-center bg-slate-600'>Data Display</h1>
                 <button className='btn btn-sm bg-red-200' onClick={submitJobListing}>
-                    Submit Job Data
+                    Submit To Applied Jobs
                 </button>
+                {!LoggedIn && <p className='bg-red-600'>You Must Click the Activate Menu on the Nav to Submit</p>}
                 <ul className = 'overflow-y-scroll divide-y-2 p-2'>
                     {Object.entries(exportDataState.data).map(([key, value]) => (
                         <li key={key}>

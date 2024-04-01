@@ -49,12 +49,12 @@ export default function Buttons({ documentText,disable }) {
   console.log(documentText)
   console.log(exportDataState)
 
-  function deleteButtons(){
-    let removeButtons = document.querySelectorAll('.button-container');
-    removeButtons.forEach(function(button) {
-        button.remove();
-      });
-  }
+  // function deleteButtons(){
+  //   let removeButtons = document.querySelectorAll('.button-container');
+  //   removeButtons.forEach(function(button) {
+  //       button.remove();
+  //     });
+  // }
 
   function handleData(e) {
     let highlightedTexted = window.getSelection().toString().trim()
@@ -87,12 +87,12 @@ export default function Buttons({ documentText,disable }) {
 
   return (
     <div key={randomNumber}>
-      <div className='flex flex-wrap gap-5 first-letter:justify-center'>
-        <button className=' btn btn-active btn-accent' onClick={(e) => handleData(e)}>Job_Title</button>
-        <button className='btn' onClick={(e) => handleData(e)}>Company</button>
-        <button className='btn' onClick={(e) => handleData(e)}>Job_Description</button>
-        <button className='btn' onClick={deleteButtons}>Remove Buttons</button>
-        <button className='btn' onClick={()=> disable()}>Disable App</button>
+      <div className='flex flex-wrap gap-5 justify-center bg-green-200 p-2'>
+        <button className=' btn btn-sm btn-active btn-accent' onClick={(e) => handleData(e)}>Job_Title</button>
+        <button className='btn btn-sm ' onClick={(e) => handleData(e)}>Company</button>
+        <button className='btn btn-sm ' onClick={(e) => handleData(e)}>Job_Description</button>
+        {/* <button className='btn btn-sm ' onClick={deleteButtons}>Remove Buttons</button> */}
+        <button className='btn btn-sm ' onClick={()=> disable()}>Disable App</button>
       </div>
     </div>
   )

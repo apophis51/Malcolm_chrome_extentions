@@ -15,8 +15,6 @@
         "js": ["dist/output.js"],
         "css":["dist/output.css","dist/output2.css"],
         "matches": [
-          "https://developer.chrome.com/docs/extensions/*",
-          "https://developer.chrome.com/docs/webstore/*",
           "https://*/*"
         ]
       }

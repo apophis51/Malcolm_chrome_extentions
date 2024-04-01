@@ -1,7 +1,7 @@
 import React from 'react'
 // import ReactDOM from 'react-dom/client'
 import Buttons from './React Components/Buttons.jsx'
-import NavBar from './React Components/NavBar.jsx'
+import NavBar from './React Components/NavBar.tsx'
 import { createRoot } from 'react-dom/client'
 import * as buttonUtils from './VanillaUtils/buttonUtils.js';
 import ApplicationTracker from './React Components/ApplicationTracker.jsx'
@@ -12,15 +12,6 @@ async function main() {
 
 
   let disabled = false
-
-  if (sessionStorage.getItem('token') == null) {
-    sessionStorage.setItem('token', 'abc123');
-  }
-  else {
-    console.log('token already present')
-  }
-  let storedToken = sessionStorage.getItem('token');
-  console.log('sessionStorage:', storedToken);
 
   let disableStatus = await AppConfig().disableStatus()  //
   let storageStatusID = await AppConfig().idStatus()  //
@@ -57,17 +48,16 @@ async function main() {
     }
   }
   console.log("disabled status", disabled)
-  console.log('checkpoint3')
 
   async function disable() {
-    console.log('disabled')
+    console.log('the app is now disabled')
     disabled = true
     await AppConfig().storageDisableTrue()  //
     console.log('localStorage:', disableStatus)
   }
 
   async function enable() {
-    console.log('enabled')
+    console.log('the app is now enabled')
     disabled = false
     await AppConfig().storageDisableFalse() //
     console.log('localStorage:', disableStatus)
@@ -239,7 +229,6 @@ async function main() {
 
 
     if (disabled == false) {
-      console.log('triggered')
       let children = document.querySelectorAll('*');
       children.forEach(function (child) {
         child.addEventListener('mouseenter', function () {
