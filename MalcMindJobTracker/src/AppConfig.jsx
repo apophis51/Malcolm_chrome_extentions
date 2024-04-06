@@ -32,7 +32,7 @@ async function authorizedStatus(url) {
     }
   }
 }
-export default function AppConfig(mode = 'local') {
+export default function AppConfig(mode = 'production') {
   if (mode == 'local') {
     console.log(localStorage.getItem('disabled'))
     return {
@@ -48,7 +48,8 @@ export default function AppConfig(mode = 'local') {
       storeID: ((id) => localStorage.setItem('id', id)),
       idGeneratorURL: 'http://localhost:3000/WorkSearchApp/Authorize/api',
       generateID: (() => generateId()),
-      isAuthorized: (() => authorizedStatus('http://localhost:3532/userMap'))
+      isAuthorized: (() => authorizedStatus('http://localhost:3532/userMap')),
+      getJobs: (() => fetch('https://malcmind-strapi-cms-production.up.railway.app/api/job-searches?pagination[page]=1&pagination[pageSize]=80&filters[userEmail][$eqi]=malcolmxvernon@hotmail.com'))
     };
   }
   // if (mode == 'custom') {
