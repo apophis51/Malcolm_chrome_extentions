@@ -11,12 +11,10 @@
     },
     "content_scripts": [
       {
-        "js": ["scripts/content.js","scripts/test.js"],
-        "css":["global.css"],
+        "js": ["scripts/content.js"],
         "matches": [
           "https://developer.chrome.com/docs/extensions/*",
-          "https://developer.chrome.com/docs/webstore/*",
-          "https://*/*"
+          "https://developer.chrome.com/docs/webstore/*"
         ]
       }
     ]

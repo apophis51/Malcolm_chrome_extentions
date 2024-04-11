@@ -36,9 +36,9 @@ export default function AppConfig(mode = 'production') {
   if (mode == 'local') {
     console.log(localStorage.getItem('disabled'))
     return {
-      Url: ((id) => `http://localhost:3000/WorkSearchApp/Authorize?id=${id}`),
+      Url: ((id) => `http://localhost:3000/Work-Search-App/Authorize?id=${id}`),
       WebSocket: 'ws://localhost:3532',
-      jobApiURL: 'http://localhost:3000/WorkSearchApp/api',
+      jobApiURL: 'http://localhost:3000/Work-Search-App/api',
       storageDisableTrue: (() => localStorage.setItem('disabled', "true")),
       storageDisableFalse: (() => localStorage.setItem('disabled', "false")),
       disableStatus: (() => localStorage.getItem('disabled')),
@@ -46,7 +46,7 @@ export default function AppConfig(mode = 'production') {
       idStatus: (() => localStorage.getItem('id')),
       clearStorage: (() => localStorage.clear()),
       storeID: ((id) => localStorage.setItem('id', id)),
-      idGeneratorURL: 'http://localhost:3000/WorkSearchApp/Authorize/api',
+      idGeneratorURL: 'http://localhost:3000/Work-Search-App/Authorize/api',
       generateID: (() => generateId()),
       isAuthorized: (() => authorizedStatus('http://localhost:3532/userMap')),
       getJobs: (() => fetch('https://malcmind-strapi-cms-production.up.railway.app/api/job-searches?pagination[page]=1&pagination[pageSize]=80&filters[userEmail][$eqi]=malcolmxvernon@hotmail.com'))
@@ -71,9 +71,9 @@ export default function AppConfig(mode = 'production') {
   // }
   if (mode == 'production') {
     return {
-      Url: ((id) => `https://malcmind.com/WorkSearchApp/Authorize?id=${id}`),
+      Url: ((id) => `https://malcmind.com/Work-Search-App/Authorize?id=${id}`),
       WebSocket: 'wss://cryptoai-production.up.railway.app',
-      jobApiURL: 'https://malcmind.com/WorkSearchApp/api',
+      jobApiURL: 'https://malcmind.com/Work-Search-App/api',
       storageDisableTrue: (() => chrome.storage.local.set({ 'disabled': "true" })),
       storageDisableFalse: (() => chrome.storage.local.set({ 'disabled': "false" })),
       disableStatus: ((() => chrome.storage.local.get('disabled').then((result) => { return result.disabled; }))),
@@ -81,7 +81,7 @@ export default function AppConfig(mode = 'production') {
       idStatus: (() => chrome.storage.local.get('id').then((result) => { return result.id; })),
       clearStorage: (() => chrome.storage.local.clear()),
       storeID: ((id) => chrome.storage.local.set({ 'id': id })),
-      idGeneratorURL: 'https://malcmind.com/WorkSearchApp/Authorize/api',
+      idGeneratorURL: 'https://malcmind.com/Work-Search-App/Authorize/api',
       generateID: (() => generateId()),
       isAuthorized: (() => authorizedStatus('https://cryptoai-production.up.railway.app/userMap'))
 
