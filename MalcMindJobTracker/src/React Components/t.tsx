@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import interact from 'interactjs'
 import AppConfig from '../AppConfig'
 import { atom, useAtom } from 'jotai'
-import { loggedIn } from './Atoms.js'
+import {  loggedIn } from './Atoms.js'
 
 const position = { x: 0, y: 0 }
 
@@ -27,7 +27,7 @@ type Status = 'Not Logged In - Click Activate to Activate' | 'Logged In - Click 
 export default function navBar({ disable, enable }) {
     const [LoggedIn, setLoggedIn] = useAtom(loggedIn)
     const [User, setUser] = useState<Status>('Not Logged In - Click Activate to Activate')
-    console.log(LoggedIn)
+console.log(LoggedIn)
 
     function colorDom(setUnset) {
         var children = document.querySelectorAll('*');
@@ -81,25 +81,25 @@ export default function navBar({ disable, enable }) {
 
     async function handleLogOut() {
         await AppConfig()!.clearStorage()
-        setLoggedIn(false)
+        setLoggedIn(false)  
     }
 
     async function handleURL() {
         let myID = await AppConfig()!.idStatus()
         window.location.href = AppConfig()!.Url(myID)
     }
-    async function isAuthorized() {
+    async function isAuthorized(){
         let result = await AppConfig()!.isAuthorized()
         console.log(result)
-        if (result == false || result == undefined) {
+        if(result == false || result == undefined){
             setUser("Not Logged In - Click Activate to Activate")
             setLoggedIn(false)
         }
-        else {
-            setUser("Logged In - Click LogOut to LogOut")
+        else{
+            setUser("Logged In - Click LogOut to LogOut")  
             setLoggedIn(true)
         }
-
+        
     }
     useEffect(() => {
         // linkActivator('set')
@@ -117,25 +117,21 @@ export default function navBar({ disable, enable }) {
 
     return (
         <>
-            <div className="flex justify-center items-center navbar bg-green-800 fixed z-[2000] dontTrack drager  text-white text-3xl group" >
-                <div className='flex flex-col justify-center items-center' >
-                {/* <div className='tooltip tooltip-bottom' data-tip="hold to drag bar"> */}
-                    <div className='flex justify-center flex-wrap gap-10 '>
-                        <h2 className='text-white' >Work Search App</h2>
-                        {/* <button className='btn' onClick={() => colorDom('set')}>Color DOM</button> */}
-                        {/* <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button> */}
-                        {/* <button className='btn' onClick={() => linkActivator('set')}>Deactivate Links</button> */}
-                        {/* <button className='btn' onClick={() => linkActivator('unset')}>Reactivate Links</button> */}
-                        {/* <button className='btn' onClick={() => removeButtons()}>Remove All Injected Buttons</button> */}
-                        <button className='btn btn-sm' onClick={() => disable()}>Disable</button>
-                        <button className='btn btn-sm' onClick={() => enable()}>Enable</button>
-                        {!LoggedIn && <button className='btn btn-sm' onClick={handleURL}>Activate</button>}
-                        {LoggedIn && <button className='btn btn-sm' onClick={handleLogOut}>LogOut</button>}
-                        {/* <p  className="tooltip tooltip-bottom w-full" data-tip="hold to drag bar">.</p> */}
-                    </div>
-                    <p className='text-sm text-white'>{User}</p>
-                    <p className='hover:text-red-400 hidden group-hover:block group-hover:visible'>click to drag</p>
+            <div className="navbar bg-green-800 fixed z-[2000] dontTrack drager tooltip tooltip-bottom text-white text-3xl " data-tip="hold to drag bar">
+                <div className='flex justify-center flex-wrap gap-10'>
+                    <h2 className=' tooltip tooltip-bottom' data-tip="hold to drag bar">Work Search App</h2>
+                    {/* <button className='btn' onClick={() => colorDom('set')}>Color DOM</button> */}
+                    {/* <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button> */}
+                    {/* <button className='btn' onClick={() => linkActivator('set')}>Deactivate Links</button> */}
+                    {/* <button className='btn' onClick={() => linkActivator('unset')}>Reactivate Links</button> */}
+                    {/* <button className='btn' onClick={() => removeButtons()}>Remove All Injected Buttons</button> */}
+                    <button className='btn btn-sm' onClick={() => disable()}>Disable</button>
+                    <button className='btn btn-sm' onClick={() => enable()}>Enable</button>
+                    {!LoggedIn && <button className='btn btn-sm' onClick={handleURL}>Activate</button>}
+                    {LoggedIn && <button className='btn btn-sm' onClick={handleLogOut}>LogOut</button>}
+                    {/* <p  className="tooltip tooltip-bottom w-full" data-tip="hold to drag bar">.</p> */}
                 </div>
+                    <p className='text-sm'>{User}</p>
             </div>
             <div className='pt-20'>
             </div>
