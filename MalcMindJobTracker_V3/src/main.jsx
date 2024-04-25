@@ -10,18 +10,25 @@ import AppConfig from './AppConfig.jsx';
 
 async function main() {
   
-  chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-     if (message.action == "fuckface") {
-       console.log('welcome to the fucking jungle')
-       };
-     //  chrome.tabs.reload()
-   });
 
-
+///***CONSIDER THIS FEATURE IN THE FUTURE */
+  // chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  //    if (message.action == "fuckface") {
+  //      console.log('welcome to the fucking jungle')
+  //      };
+  //  });
+///
   let disabled = false
 
   let disableStatus = await AppConfig().disableStatus()  //
-  chrome.runtime.sendMessage({action: "updateStatus", value: disableStatus})
+
+   /**
+   * @note this try catch block does not fail on deployment but is meant to aid local testing when the chrome runtime is unavaialble
+   */
+   try{
+    chrome.runtime.sendMessage({action: "updateStatus", value: disableStatus})
+    }
+    catch{}
   console.log('the disabled status is', disableStatus)
   let storageStatusID = await AppConfig().idStatus()  //
   console.log('Disabled Status', disableStatus)
@@ -59,8 +66,10 @@ async function main() {
   console.log("disabled status", disabled)
 
   async function disable() {
+    if(AppConfig().Mode != 'local'){
     navInstance.unmount()
     applicationInstance.unmount()
+    }
     console.log('the app is now disabled')
     disabled = true
     console.log('repeat disabled message')
@@ -111,6 +120,25 @@ console.log('hello0000000000')
   let navInstance = createRoot(navDiv)
   let documentBody = document.querySelector('body')
   documentBody.prepend(navDiv)
+
+
+  /**
+   * @note We dont want it to disable render if we are in local mode
+   */
+  // if(AppConfig().Mode == 'local'){
+  //   navInstance.render(
+  //     <React.StrictMode>
+  //       <NavBar disable={disable} enable={enable} />
+  //     </React.StrictMode>,
+  //   )
+  // }
+  if(AppConfig().Mode == 'local'){
+    navInstance.render(
+      <React.StrictMode>
+        <NavBar disable={disable} enable={enable} />
+      </React.StrictMode>,
+    )
+  }
   if(!disabled){
   navInstance.render(
     <React.StrictMode>
@@ -121,7 +149,25 @@ console.log('hello0000000000')
   let applicationDiv = document.createElement('div');
   let applicationInstance = createRoot(applicationDiv)
   documentBody.prepend(applicationDiv)
-  if(!disabled){
+
+    /**
+   * @note We dont want it to disable render if we are in local mode
+   */
+    // if(AppConfig().Mode == 'local'){
+    //   applicationInstance.render(
+    //     <React.StrictMode>
+    //       <ApplicationTracker />
+    //     </React.StrictMode>,
+    //   )
+    // }
+    if(AppConfig().Mode == 'local'){
+      applicationInstance.render(
+        <React.StrictMode>
+          <ApplicationTracker />
+        </React.StrictMode>,
+      )
+    }
+  if(!disabled ){
   applicationInstance.render(
     <React.StrictMode>
       <ApplicationTracker />

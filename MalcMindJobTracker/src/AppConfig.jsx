@@ -32,7 +32,7 @@ async function authorizedStatus(url) {
     }
   }
 }
-export default function AppConfig(mode = 'production') {
+export default function AppConfig(mode = 'local') {
   if (mode == 'local') {
     console.log(localStorage.getItem('disabled'))
     return {

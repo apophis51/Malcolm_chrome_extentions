@@ -19,7 +19,9 @@ async function authorizedStatus(url) {
   if (myId) {
     let result = await fetch(url)
     let resultJson = await result.json()
+    console.log(resultJson)
     let authorized = resultJson[myId]
+    console.log(myId)
     console.log(authorized)
 
     if (authorized) {
@@ -32,10 +34,24 @@ async function authorizedStatus(url) {
     }
   }
 }
-export default function AppConfig(mode = 'production') {
+
+export default function AppConfig(mode = 'local') {
+  console.log("chrome.storage status:",chrome.storage)
+  if (chrome.storage != undefined) mode = 'production'
+  // console.log('cool')
+  // let testLocalStatus = await fetch('http://localhost:5173')
+  // console.log(mode)
+  // console.log(testLocalStatus.status)
+  // console.log(testLocalStatus.status == 200)
+  // if (testLocalStatus.status == 200){
+  //   console.log('test')
+  //   mode = 'local'
+  //   console.log('new mode',mode)
+  // }
   if (mode == 'local') {
     console.log(localStorage.getItem('disabled'))
     return {
+      Mode: mode,
       Url: ((id) => `http://localhost:3000/Work-Search-App/Authorize?id=${id}`),
       WebSocket: 'ws://localhost:3532',
       jobApiURL: 'http://localhost:3000/Work-Search-App/api',
@@ -71,6 +87,7 @@ export default function AppConfig(mode = 'production') {
   // }
   if (mode == 'production') {
     return {
+      Mode: mode,
       Url: ((id) => `https://malcmind.com/Work-Search-App/Authorize?id=${id}`),
       WebSocket: 'wss://cryptoai-production.up.railway.app',
       jobApiURL: 'https://malcmind.com/Work-Search-App/api',

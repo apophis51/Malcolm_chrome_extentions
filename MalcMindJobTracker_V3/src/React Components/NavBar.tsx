@@ -5,6 +5,7 @@ import interact from 'interactjs'
 import AppConfig from '../AppConfig'
 import { atom, useAtom } from 'jotai'
 import { loggedIn } from './Atoms.js'
+import DevBar from './DevBar'
 
 const position = { x: 0, y: 0 }
 
@@ -82,10 +83,13 @@ export default function navBar({ disable, enable }) {
     async function handleLogOut() {
         await AppConfig()!.clearStorage()
         setLoggedIn(false)
+        //we want to generate a new ID so that the user can activate the app again in the future
+        await AppConfig()!.generateID()
     }
 
     async function handleURL() {
         let myID = await AppConfig()!.idStatus()
+        console.log('Activate Button 1 | myID status', myID)
         window.location.href = AppConfig()!.Url(myID)
     }
     async function isAuthorized() {
@@ -117,9 +121,10 @@ export default function navBar({ disable, enable }) {
 
     return (
         <>
-            <div className="flex justify-center items-center navbar bg-green-800 fixed z-[2000] dontTrack drager  text-white text-3xl group" >
+            <div className="flex justify-center items-center navbar bg-green-800 fixed z-[2000] dontTrack drager  text-white text-3xl group max-h-[50%]" >
                 <div className='flex flex-col justify-center items-center' >
                 {/* <div className='tooltip tooltip-bottom' data-tip="hold to drag bar"> */}
+                    {AppConfig().Mode == 'local' && <DevBar />}
                     <div className='flex justify-center flex-wrap gap-10 '>
                         <h2 className='text-white' >Work Search App</h2>
                         {/* <button className='btn' onClick={() => colorDom('set')}>Color DOM</button> */}
@@ -134,7 +139,7 @@ export default function navBar({ disable, enable }) {
                         {/* <p  className="tooltip tooltip-bottom w-full" data-tip="hold to drag bar">.</p> */}
                     </div>
                     <p className='text-sm text-white'>{User}</p>
-                    <p className='hover:text-red-400 hidden group-hover:block group-hover:visible'>click to drag</p>
+                    <p className='text-md hover:text-red-400 hidden group-hover:block group-hover:visible'>click to drag</p>
                 </div>
             </div>
             <div className='pt-20'>
