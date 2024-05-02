@@ -87,6 +87,10 @@ export default function navBar({ disable, enable }) {
         await AppConfig()!.generateID()
     }
 
+    function handleViewJobs() {
+        window.open(AppConfig().submittedJobURL, '_blank')
+    } 
+
     async function handleURL() {
         let myID = await AppConfig()!.idStatus()
         console.log('Activate Button 1 | myID status', myID)
@@ -139,6 +143,7 @@ export default function navBar({ disable, enable }) {
                         {/* <p  className="tooltip tooltip-bottom w-full" data-tip="hold to drag bar">.</p> */}
                     </div>
                     <p className='text-sm text-white'>{User}</p>
+                    <p className='text-sm text-white '>View Submitted Jobs at <button className='dontTrack' onClick={handleViewJobs}><a>{AppConfig().submittedJobURL}</a></button></p>
                     <p className='text-md hover:text-red-400 hidden group-hover:block group-hover:visible'>click to drag</p>
                 </div>
             </div>

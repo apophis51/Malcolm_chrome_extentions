@@ -1,6 +1,5 @@
 import React from "react";
 import AppConfig from '../AppConfig'
-import deployScript from '../deployScript'
 import { useState } from 'react';
 
 type deploying = 'deploying' | 'deployed' | 'not deploying' | 'failed'

@@ -284,7 +284,7 @@ console.log('hello0000000000')
 
 
     // Disable all links within the document
-    if (disabled == false) {
+    if (disabled == false ) {
       console.log('this is ran')
       // var links = clickedNode.querySelectorAll('a');
       var links = document.querySelectorAll('a')
