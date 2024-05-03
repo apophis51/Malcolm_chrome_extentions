@@ -17,7 +17,7 @@ async function main() {
       console.log('message recieved from worker', message)
       const bodyText = document.body.innerText;
       const disableStatus = await AppConfig().disableStatus()
-      if (message.action == "DoWeNeedAReload?") {
+      if (message.action == "DoWeNeedAReload") {
         if (disableStatus == "true" && (bodyText.includes("Work Search App"))) {
           console.log('### the text was found!')
           chrome.runtime.sendMessage({ action: "reload" })

@@ -24,7 +24,7 @@
     "content_scripts": [
       {
         "js": ["/dist/output.js"],
-        "css":["/dist/output.css","/dist/output2.css"],
+        "css":["/dist/output2.css"],
         "matches": [
           "https://*/*"
         ]
