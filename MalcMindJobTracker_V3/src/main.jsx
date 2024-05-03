@@ -9,26 +9,54 @@ import ApplicationTracker from './React Components/ApplicationTracker.jsx'
 import AppConfig from './AppConfig.jsx';
 
 async function main() {
-  
 
-///***CONSIDER THIS FEATURE IN THE FUTURE */
-  // chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  //    if (message.action == "fuckface") {
-  //      console.log('welcome to the fucking jungle')
-  //      };
-  //  });
-///
+
+  ///***CONSIDER THIS FEATURE IN THE FUTURE */
+  try {
+    chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+      console.log('message recieved from worker', message)
+      const bodyText = document.body.innerText;
+      const disableStatus = await AppConfig().disableStatus()
+      if (message.action == "DoWeNeedAReload?") {
+        if (disableStatus == "true" && (bodyText.includes("Work Search App"))) {
+          console.log('### the text was found!')
+          chrome.runtime.sendMessage({ action: "reload" })
+        }
+        if (disableStatus == "false" && !(bodyText.includes("Work Search App"))) {
+          console.log('### the text was not found!')
+          chrome.runtime.sendMessage({ action: "reload" })
+        }
+      };
+      if (message.action == "getDisabledStatus") {
+        // try {
+        //   await chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        //     var currentTab = tabs[0];
+        //     console.log('Current Tab:', currentTab);
+        //     // You can now use currentTab.id or other tab properties
+        //   });
+        // }
+
+        // catch (error) {
+        //   console.log('tabs from main failed', error)
+        // }
+        console.log("######### we are sending our disabled status")
+        chrome.runtime.sendMessage({ action: "disabledStatus", value: await AppConfig().disableStatus() })
+      };
+    });
+  }
+  catch { }
+  ///
   let disabled = false
 
   let disableStatus = await AppConfig().disableStatus()  //
 
-   /**
-   * @note this try catch block does not fail on deployment but is meant to aid local testing when the chrome runtime is unavaialble
-   */
-   try{
-    chrome.runtime.sendMessage({action: "updateStatus", value: disableStatus})
-    }
-    catch{}
+  /**
+  * @note this try catch block does not fail on deployment but is meant to aid local testing when the chrome runtime is unavaialble
+  */
+  try {
+    chrome.runtime.sendMessage({ action: "updateStatus", value: disableStatus })
+  }
+  catch { }
   console.log('the disabled status is', disableStatus)
   let storageStatusID = await AppConfig().idStatus()  //
   console.log('Disabled Status', disableStatus)
@@ -66,9 +94,9 @@ async function main() {
   console.log("disabled status", disabled)
 
   async function disable() {
-    if(AppConfig().Mode != 'local'){
-    navInstance.unmount()
-    applicationInstance.unmount()
+    if (AppConfig().Mode != 'local') {
+      navInstance.unmount()
+      applicationInstance.unmount()
     }
     console.log('the app is now disabled')
     disabled = true
@@ -76,9 +104,9 @@ async function main() {
     await AppConfig().storageDisableTrue()  //
     disableStatus = await AppConfig().disableStatus()
     console.log("status", disableStatus)
-console.log('hello0000000000')
+    console.log('hello0000000000')
     // console.log('localStorage:', disableStatus)
-    chrome.runtime.sendMessage({action: "updateStatus", value: "true"});
+    chrome.runtime.sendMessage({ action: "updateStatus", value: "true" });
 
   }
 
@@ -92,7 +120,7 @@ console.log('hello0000000000')
     console.log('localStorage:', disableStatus)
     console.log(disabled)
     console.log('flskdjflskdfjdf')
-    chrome.runtime.sendMessage({action: "updateStatus", value: "false"});
+    chrome.runtime.sendMessage({ action: "updateStatus", value: "false" });
 
   }
 
@@ -132,48 +160,48 @@ console.log('hello0000000000')
   //     </React.StrictMode>,
   //   )
   // }
-  if(AppConfig().Mode == 'local'){
+  if (AppConfig().Mode == 'local') {
     navInstance.render(
       <React.StrictMode>
         <NavBar disable={disable} enable={enable} />
       </React.StrictMode>,
     )
   }
-  if(!disabled){
-  navInstance.render(
-    <React.StrictMode>
-      <NavBar disable={disable} enable={enable} />
-    </React.StrictMode>,
-  )
-}
+  if (!disabled) {
+    navInstance.render(
+      <React.StrictMode>
+        <NavBar disable={disable} enable={enable} />
+      </React.StrictMode>,
+    )
+  }
   let applicationDiv = document.createElement('div');
   let applicationInstance = createRoot(applicationDiv)
   documentBody.prepend(applicationDiv)
 
-    /**
-   * @note We dont want it to disable render if we are in local mode
-   */
-    // if(AppConfig().Mode == 'local'){
-    //   applicationInstance.render(
-    //     <React.StrictMode>
-    //       <ApplicationTracker />
-    //     </React.StrictMode>,
-    //   )
-    // }
-    if(AppConfig().Mode == 'local'){
-      applicationInstance.render(
-        <React.StrictMode>
-          <ApplicationTracker />
-        </React.StrictMode>,
-      )
-    }
-  if(!disabled ){
-  applicationInstance.render(
-    <React.StrictMode>
-      <ApplicationTracker />
-    </React.StrictMode>,
-  )
-}
+  /**
+ * @note We dont want it to disable render if we are in local mode
+ */
+  // if(AppConfig().Mode == 'local'){
+  //   applicationInstance.render(
+  //     <React.StrictMode>
+  //       <ApplicationTracker />
+  //     </React.StrictMode>,
+  //   )
+  // }
+  if (AppConfig().Mode == 'local') {
+    applicationInstance.render(
+      <React.StrictMode>
+        <ApplicationTracker />
+      </React.StrictMode>,
+    )
+  }
+  if (!disabled) {
+    applicationInstance.render(
+      <React.StrictMode>
+        <ApplicationTracker />
+      </React.StrictMode>,
+    )
+  }
 
   function handleClick(event) {
     console.log(window.getSelection().toString().trim())
@@ -284,7 +312,7 @@ console.log('hello0000000000')
 
 
     // Disable all links within the document
-    if (disabled == false ) {
+    if (disabled == false) {
       console.log('this is ran')
       // var links = clickedNode.querySelectorAll('a');
       var links = document.querySelectorAll('a')

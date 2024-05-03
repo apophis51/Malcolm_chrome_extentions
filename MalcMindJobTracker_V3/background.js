@@ -47,20 +47,25 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       text: "ON"
     });
   }
+
+  if (message.action == 'reload'){
+    console.log('reloading')
+    chrome.tabs.reload()
+  }
   //  chrome.tabs.reload()
 });
 
 chrome.tabs.onActivated.addListener(async function(activeInfo) {
-  chrome.tabs.sendMessage(activeInfo.tabId,{action: "fuckface"})
+  chrome.tabs.sendMessage(activeInfo.tabId,{action: "DoWeNeedAReload"})
   // Use the chrome.runtime.reload() function to reload the extension
   console.log(activeInfo.tabId)
   let disabledStatus = await chrome.storage.local.get('disabled').then((result) => { return result.disabled; })
   console.log("onactivated disabled status", disabledStatus) 
   console.log('current status', tabStatusTracker)
-  if (tabStatusTracker[activeInfo.tabId] != disabledStatus) {
-    tabStatusTracker[activeInfo.tabId] = disabledStatus
-    chrome.tabs.reload();
-  }
+  // if (tabStatusTracker[activeInfo.tabId] != disabledStatus) {
+  //   tabStatusTracker[activeInfo.tabId] = disabledStatus
+  //   chrome.tabs.reload();
+  // }
   // chrome.tabs.reload()
   // chrome.runtime.reload();
 });
