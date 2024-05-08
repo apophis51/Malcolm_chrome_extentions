@@ -106,7 +106,7 @@ export default function AppConfig(mode = 'local') {
       idGeneratorURL: 'https://malcmind.com/Work-Search-App/Authorize/api',
       generateID: (() => generateId()),
       isAuthorized: (() => authorizedStatus('https://cryptoai-production.up.railway.app/userMap')),
-      get_AI_URL: 'http://malcmind.com/Work-Search-App/groqAPI'
+      get_AI_URL: 'https://malcmind.com/Work-Search-App/groqAPI'
 
     };
   }

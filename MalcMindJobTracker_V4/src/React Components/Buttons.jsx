@@ -61,9 +61,6 @@ export default function Buttons({ documentText,disable }) {
   // }
   async function handleAI(){
     console.log('processing')
-    let resumeData = await fetch('https://malcmind-strapi-cms-production.up.railway.app/api/job-resumes?pagination[page]=1&pagination[pageSize]=80')
-    let resumeDataJson = await resumeData.json() 
-    console.log(resumeDataJson.data[0].attributes.Resume)
     let aiButtons = document.querySelectorAll('input , select, textarea')
     let results = []
     let questionList= []
