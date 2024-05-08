@@ -17,14 +17,14 @@
         "128": "images/icon-128.png"
       }
     },
-    "permissions": ["storage","activeTab","tabs"],
+    "permissions": ["storage","activeTab"],
     "background": {
       "service_worker": "background.js"
   },
     "content_scripts": [
       {
         "js": ["/dist/output.js"],
-        "css":["/dist/output2.css"],
+        "css":["/dist/output.css"],
         "matches": [
           "https://*/*"
         ]

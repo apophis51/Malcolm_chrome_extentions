@@ -66,7 +66,10 @@ export default function AppConfig(mode = 'local') {
       idGeneratorURL: 'http://localhost:3000/Work-Search-App/Authorize/api',
       generateID: (() => generateId()),
       isAuthorized: (() => authorizedStatus('http://localhost:3532/userMap')),
-      getJobs: (() => fetch('https://malcmind-strapi-cms-production.up.railway.app/api/job-searches?pagination[page]=1&pagination[pageSize]=80&filters[userEmail][$eqi]=malcolmxvernon@hotmail.com'))
+      // getJobs: (() => fetch('https://malcmind-strapi-cms-production.up.railway.app/api/job-searches?pagination[page]=1&pagination[pageSize]=80&filters[userEmail][$eqi]=malcolmxvernon@hotmail.com')),
+      // get_AI_URL: (()=> fetch('http://localhost:3000/Work-Search-App/groqAPI'))
+      get_AI_URL: 'http://localhost:3000/Work-Search-App/groqAPI'
+
     };
   }
   // if (mode == 'custom') {
@@ -102,7 +105,8 @@ export default function AppConfig(mode = 'local') {
       storeID: ((id) => chrome.storage.local.set({ 'id': id })),
       idGeneratorURL: 'https://malcmind.com/Work-Search-App/Authorize/api',
       generateID: (() => generateId()),
-      isAuthorized: (() => authorizedStatus('https://cryptoai-production.up.railway.app/userMap'))
+      isAuthorized: (() => authorizedStatus('https://cryptoai-production.up.railway.app/userMap')),
+      get_AI_URL: 'http://malcmind.com/Work-Search-App/groqAPI'
 
     };
   }

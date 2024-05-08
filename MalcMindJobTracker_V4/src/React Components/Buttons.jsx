@@ -1,3 +1,6 @@
+//code smell delete env variables before shipping to production
+
+
 // import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
@@ -6,6 +9,7 @@ import React from 'react'
 import '../index.css'
 import { atom, useAtom } from 'jotai'
 import {  exportData, postingUrlSet } from './Atoms.js'
+import  AppConfig  from '../AppConfig.jsx'
 
 
 
@@ -56,12 +60,18 @@ export default function Buttons({ documentText,disable }) {
   //     });
   // }
   async function handleAI(){
+    console.log('processing')
+    let resumeData = await fetch('https://malcmind-strapi-cms-production.up.railway.app/api/job-resumes?pagination[page]=1&pagination[pageSize]=80')
+    let resumeDataJson = await resumeData.json() 
+    console.log(resumeDataJson.data[0].attributes.Resume)
     let aiButtons = document.querySelectorAll('input , select, textarea')
     let results = []
     let questionList= []
+    let megaQuestionList = []
     aiButtons.forEach(field => {
       console.log(field)
-        const label = document.querySelector(`label[for="${field.id}"]`) || field.closest('label') || field.parentElement;
+      // we also need to push the label to the data so we can reference it later  
+      const label = document.querySelector(`label[for="${field.id}"]`) || field.closest('label') || field.parentElement;
         label.focus()
         const questionText = label ? label.textContent.trim() : "No label found";
         results.push({ field: field.outerHTML, question: questionText });
@@ -69,36 +79,82 @@ export default function Buttons({ documentText,disable }) {
           if(field.options.length > 0){
             console.log('running')
             let options = []
+            let megaOptions = []
             for (let i = 0; i < field.options.length; i++) {
+              megaOptions.push({textValue: field.options[i].text, value: field.options[i].value})
               options.push(field.options[i].text)
+
             }
             questionList.push({question: questionText, options: options})
+            megaQuestionList.push({question: questionText, options: megaOptions, label: field})
           }
         }
         catch{
-          if (questionText.length > 0) questionList.push({question: questionText})
+          if (questionText.length > 0) {
+            questionList.push({question: questionText})
+            megaQuestionList.push({question: questionText, label: field})
+          }
         }
      
         
                autofillField(field, questionText);
 
     });
+    let extentionIdentifier = await AppConfig().idStatus()
+    let AI_Response = await fetch(AppConfig().get_AI_URL, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json', // Set the content type if you're sending JSON data
+          'Authorization': extentionIdentifier, // Add any other headers as needed
+          // Add any other headers as needed
+      },
+      body: JSON.stringify(questionList) // Convert the data to a JSON string
+  })
+    // let AI_Response = await fetch('http://localhost:3000/Work-Search-App/groqAPI')
+    // let AI_Response = await AppConfig().get_AI_URL()
+    let AI_ResponseJSON = await AI_Response.json()
+    console.log('this is the ai response', AI_ResponseJSON)
 
   console.log(questionList)
+ console.log('megaQuestionList', megaQuestionList)
 
 
+let manipulationResults = []
+AI_ResponseJSON.data.information.forEach(item => {
+  let question = item.question
+  
+let findItem = megaQuestionList.find(x => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
+  if(findItem){
+    console.log('we found a goodone')
+    if(findItem.options){
+      let option = findItem.options.find(x => x.textValue == item.response)
+      if(option){
+        manipulationResults.push({question: question, answer: option.value})
+        console.log(findItem.label.value)
+        findItem.label.value = option.value
+      }
+    }
+    else{
+      manipulationResults.push({question: question, answer: item.response})
+     findItem.label.value = item.response
+    }
+  }
+  console.log(question)
+})
+console.log(manipulationResults)
   function autofillField(field, questionText) {
     // Here you can define rules or data to fill the fields based on the question or field type
     if (field.type === 'text') {
         if (questionText.toLowerCase().includes('name')) {
-            field.value = 'John Doe'; // Example name
+            // field.value = 'John Doe'; // Example name
         } else if (questionText.toLowerCase().includes('email')) {
-            field.value = 'john.doe@example.com'; // Example email
+            // field.value = 'john.doe@example.com'; // Example email
         }
     } else if (field.tagName.toLowerCase() === 'select') {
         // Assume we always select the second option for demonstration
         if (field.options.length > 1) {
-            field.value = field.options[1].value;
+            // field.value = field.options[1].value;
+            // console.log(field.options[1].value)
         }
     }
 }
