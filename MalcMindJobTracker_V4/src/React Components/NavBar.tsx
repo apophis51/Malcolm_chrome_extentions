@@ -25,9 +25,12 @@ interact('.drager').draggable({
 
 type Status = 'Not Logged In - Click Activate to Activate' | 'Logged In - Click LogOut to LogOut'
 
-export default function navBar({ disable, enable }) {
+export default function navBar({ disable, enable, buttonsHidden, buttonsDisabled }) {
     const [LoggedIn, setLoggedIn] = useAtom(loggedIn)
     const [User, setUser] = useState<Status>('Not Logged In - Click Activate to Activate')
+    const [buttonsDisabledState, setButtonsDisabledState] = useState('Disable Buttons')
+    
+
     console.log(LoggedIn)
 
     function colorDom(setUnset) {
@@ -55,20 +58,6 @@ export default function navBar({ disable, enable }) {
                 child.addEventListener('mouseenter', function () {
                     child.style.boxShadow = 'none'; // Apply box shadow on hover
                 });
-            });
-        }
-    }
-
-    function linkActivator(setUnset) {
-        var links = document.querySelectorAll('a');
-        if (setUnset == 'set') {
-            links.forEach(function (link) {
-                link.style.pointerEvents = 'none';
-            });
-        }
-        if (setUnset == 'unset') {
-            links.forEach(function (link) {
-                link.style.pointerEvents = 'auto';
             });
         }
     }
@@ -109,6 +98,17 @@ export default function navBar({ disable, enable }) {
         }
 
     }
+
+async function toggleButtonState(){
+    buttonsHidden()
+    if (buttonsDisabledState == "Disable Buttons") {
+        setButtonsDisabledState('Enable Buttons')
+    }
+    else if (buttonsDisabledState== "Enable Buttons") {
+        setButtonsDisabledState('Disable Buttons')
+    }
+}
+
     useEffect(() => {
         // linkActivator('set')
         // disabler()
@@ -120,7 +120,13 @@ export default function navBar({ disable, enable }) {
         //         colorDom('unset')
         //     }
         // }
-        isAuthorized()
+        if (buttonsDisabled == "true") {
+            setButtonsDisabledState('Enable Buttons')
+        }
+        else if (buttonsDisabled == "false") {
+            setButtonsDisabledState('Disable Buttons')
+        }
+        isAuthorized()        
     }, [LoggedIn])
 
     return (
@@ -133,11 +139,10 @@ export default function navBar({ disable, enable }) {
                         <h2 className='text-white' >Work Search App</h2>
                         {/* <button className='btn' onClick={() => colorDom('set')}>Color DOM</button> */}
                         {/* <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button> */}
-                        {/* <button className='btn' onClick={() => linkActivator('set')}>Deactivate Links</button> */}
-                        {/* <button className='btn' onClick={() => linkActivator('unset')}>Reactivate Links</button> */}
                         <button className='btn btn-sm' onClick={() => disable()}>Hide + Disable</button>
-                        <button className='btn btn-sm' onClick={() => removeButtons()}>Disable Buttons</button>
-                        <button className='btn btn-sm' onClick={() => enable()}>Enable Buttons</button>
+                        {/* <button className='btn btn-sm' onClick={() => removeButtons()}>Disable Buttons</button> */}
+                        <button className='btn btn-sm' onClick={() => toggleButtonState()}>{buttonsDisabledState}</button>
+                        <button className='btn btn-sm' onClick={() => enable()}>Enable App</button>
                         {!LoggedIn && <button className='btn btn-sm' onClick={handleURL}>Activate</button>}
                         {LoggedIn && <button className='btn btn-sm' onClick={handleLogOut}>LogOut</button>}
                         {/* <p  className="tooltip tooltip-bottom w-full" data-tip="hold to drag bar">.</p> */}

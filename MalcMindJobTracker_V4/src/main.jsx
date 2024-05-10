@@ -9,14 +9,24 @@ import ApplicationTracker from './React Components/ApplicationTracker.jsx'
 import AppConfig from './AppConfig.jsx';
 
 async function main() {
-
-
-  ///***CONSIDER THIS FEATURE IN THE FUTURE */
+  //APP starts at an unkown state and we activate it by default if the user has it freshly installed, but will disable upon user icon request and we need a way for our program to track it
+  console.log('triggered')
+  let buttonsDisabled = await AppConfig().buttonStatus() //can be true or false
+  let disableStatus = await AppConfig().disableStatus()  //can be true or false
+    if (disableStatus == undefined || disableStatus == null) {
+      await AppConfig().storageDisableFalse()  
+      disableStatus = false
+    }
+    if (buttonsDisabled == undefined || buttonsDisabled == null) {
+      await AppConfig().storageHideButtonsFalse() 
+      buttonsDisabled = false
+    }
+ console.log(disableStatus)
+// The chrome Runtime always needs to know if our status is enabled or disabled
   try {
     chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       console.log('message recieved from worker', message)
       const bodyText = document.body.innerText;
-      const disableStatus = await AppConfig().disableStatus()
       if (message.action == "DoWeNeedAReload") {
         if (disableStatus == "true" && (bodyText.includes("Work Search App"))) {
           console.log('### the text was found!')
@@ -40,15 +50,13 @@ async function main() {
         //   console.log('tabs from main failed', error)
         // }
         console.log("######### we are sending our disabled status")
-        chrome.runtime.sendMessage({ action: "disabledStatus", value: await AppConfig().disableStatus() })
+        chrome.runtime.sendMessage({ action: "disabledStatus", value: disableStatus })
       };
     });
   }
   catch { }
   ///
-  let disabled = false
-
-  let disableStatus = await AppConfig().disableStatus()  //
+ 
 
   /**
   * @note this try catch block does not fail on deployment but is meant to aid local testing when the chrome runtime is unavaialble
@@ -74,17 +82,22 @@ async function main() {
   //   await AppConfig().clearStorage()  //
   // }
 
-  if (disableStatus != undefined) {
-    // if (disableStatus == "true" || disableStatus.disabled == "true") {
-    if (disableStatus == "true") {
 
-      disabled = true
-    }
-    else {
-      disabled = false
-    }
+async function hideButtons(){
+  if (buttonsDisabled == "false") {
+    await AppConfig().storageHideButtonsTrue()
+    buttonsDisabled = await AppConfig().buttonStatus()
+    console.log('localStorage:', buttonsDisabled)
   }
-  console.log("disabled status", disabled)
+  else if (buttonsDisabled == "true") {
+    await AppConfig().storageHideButtonsFalse()
+    buttonsDisabled = await AppConfig().buttonStatus()
+    console.log('localStorage:', buttonsDisabled)
+  }
+  // console.log('available')
+  // linkActivator()
+  // console.log('not available')
+}
 
   async function disable() {
     if (AppConfig().Mode != 'local') {
@@ -92,12 +105,10 @@ async function main() {
       applicationInstance.unmount()
     }
     console.log('the app is now disabled')
-    disabled = true
-    console.log('repeat disabled message')
-    await AppConfig().storageDisableTrue()  //
+    await AppConfig().storageDisableTrue()  
+    //this verifies that the app is diabled and updates our disable status
     disableStatus = await AppConfig().disableStatus()
     console.log("status", disableStatus)
-    console.log('hello0000000000')
     // console.log('localStorage:', disableStatus)
     chrome.runtime.sendMessage({ action: "updateStatus", value: "true" });
 
@@ -105,8 +116,8 @@ async function main() {
 
   async function enable() {
     console.log('the app is now enabled')
-    disabled = false
-    await AppConfig().storageDisableFalse() //
+    await AppConfig().storageDisableFalse() 
+    //this verifies that the app is diabled and updates our disable status
     disableStatus = await AppConfig().disableStatus()
 
     // console.log("status", AppConfig().disableStatus())
@@ -147,14 +158,14 @@ async function main() {
   if (AppConfig().Mode == 'local') {
     navInstance.render(
       <React.StrictMode>
-        <NavBar disable={disable} enable={enable} />
+        <NavBar disable={disable} enable={enable} buttonsHidden={hideButtons} buttonsDisabled={buttonsDisabled} />
       </React.StrictMode>,
     )
   }
-  if (!disabled) {
+  if (disableStatus == "false") {
     navInstance.render(
       <React.StrictMode>
-        <NavBar disable={disable} enable={enable} />
+        <NavBar disable={disable} enable={enable} buttonsHidden={hideButtons} buttonsDisabled={buttonsDisabled}/>
       </React.StrictMode>,
     )
   }
@@ -179,7 +190,7 @@ async function main() {
       </React.StrictMode>,
     )
   }
-  if (!disabled) {
+  if (disableStatus == 'false') {
     applicationInstance.render(
       <React.StrictMode>
         <ApplicationTracker />
@@ -235,7 +246,7 @@ async function main() {
     ///////////////////////////////////////////// Light Yellow Function
 
     if (!(myButtons.includes(clickedNode.textContent) || clickedNode.classList.contains('dontTrack') || hasParrentWithClassResult)) {
-      if (disabled == false) {
+      if (disableStatus == "false") {
         clickedNode.style.backgroundColor = 'lightyellow';
       }
     }
@@ -295,30 +306,34 @@ async function main() {
      * 
     */
     if (!myButtons.includes(clickedNode.textContent) && clickedNode.className !== 'card draggable resizable' && !clickedNode.parentNode.classList.contains('card') && !clickedNode.classList.contains('dontTrack') && !hasParrentWithClassResult) {
-      if (disabled == false) {
+      if (disableStatus == "false" && buttonsDisabled == "false") {
         clickedNode.parentNode.insertBefore(buttonContainer, clickedNode);
       }
     }
-
-
-    // Disable all links within the document
-    if (disabled == false) {
+    
+    linkActivator()
+    console.log(buttonsDisabled)
+    console.log('this is ran')
+    // Disable all links within the document and also do this if the buttons are disabled
+    function linkActivator(){
+    if (disableStatus == "false" && buttonsDisabled == "false") {
       console.log('this is ran')
       // var links = clickedNode.querySelectorAll('a');
       var links = document.querySelectorAll('a')
       links.forEach(function (link) {
+        console.log(link.style.pointerEvents)
         link.style.pointerEvents = 'none';
       });
     }
-    if (disabled == true) {
+    if (disableStatus == "true" || buttonsDisabled == "true") {
       var links = document.querySelectorAll('a')
       links.forEach(function (link) {
         link.style.pointerEvents = 'auto';
       });
     }
+  }
 
-
-    if (disabled == false) {
+    if (disableStatus == "false") {
       let children = document.querySelectorAll('*');
       children.forEach(function (child) {
         child.addEventListener('mouseenter', function () {
@@ -330,7 +345,7 @@ async function main() {
       });
 
     }
-    if (disabled == true) {
+    if (disableStatus == "true") {
       let children = document.querySelectorAll('*');
       children.forEach(function (child) {
         child.style.border = '';
@@ -350,7 +365,6 @@ async function main() {
     //         node.style.backgroundColor = ''; // Reset to default or remove this line to keep the previous background
     //     }
     // });
-    console.log(disabled)
 
     // Add a red border to all children of the clicked node unless we don't want to track that node
     // if (disabled == false && !clickedNode.classList.contains('dontTrack') && !hasParrentWithClassResult){
