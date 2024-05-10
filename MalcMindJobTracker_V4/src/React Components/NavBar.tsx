@@ -135,9 +135,9 @@ export default function navBar({ disable, enable }) {
                         {/* <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button> */}
                         {/* <button className='btn' onClick={() => linkActivator('set')}>Deactivate Links</button> */}
                         {/* <button className='btn' onClick={() => linkActivator('unset')}>Reactivate Links</button> */}
-                        {/* <button className='btn' onClick={() => removeButtons()}>Remove All Injected Buttons</button> */}
-                        <button className='btn btn-sm' onClick={() => disable()}>Disable</button>
-                        <button className='btn btn-sm' onClick={() => enable()}>Enable</button>
+                        <button className='btn btn-sm' onClick={() => disable()}>Hide + Disable</button>
+                        <button className='btn btn-sm' onClick={() => removeButtons()}>Disable Buttons</button>
+                        <button className='btn btn-sm' onClick={() => enable()}>Enable Buttons</button>
                         {!LoggedIn && <button className='btn btn-sm' onClick={handleURL}>Activate</button>}
                         {LoggedIn && <button className='btn btn-sm' onClick={handleLogOut}>LogOut</button>}
                         {/* <p  className="tooltip tooltip-bottom w-full" data-tip="hold to drag bar">.</p> */}

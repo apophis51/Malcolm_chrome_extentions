@@ -118,8 +118,6 @@ async function main() {
 
     // console.log("status", AppConfig().disableStatus())
     console.log('localStorage:', disableStatus)
-    console.log(disabled)
-    console.log('flskdjflskdfjdf')
     chrome.runtime.sendMessage({ action: "updateStatus", value: "false" });
 
   }
