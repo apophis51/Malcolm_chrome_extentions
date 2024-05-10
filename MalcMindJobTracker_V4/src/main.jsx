@@ -74,13 +74,6 @@ async function main() {
   //   await AppConfig().clearStorage()  //
   // }
 
-
-
-
-
-
-  console.log('checkpoint2')
-
   if (disableStatus != undefined) {
     // if (disableStatus == "true" || disableStatus.disabled == "true") {
     if (disableStatus == "true") {
@@ -151,13 +144,6 @@ async function main() {
   /**
    * @note We dont want it to disable render if we are in local mode
    */
-  // if(AppConfig().Mode == 'local'){
-  //   navInstance.render(
-  //     <React.StrictMode>
-  //       <NavBar disable={disable} enable={enable} />
-  //     </React.StrictMode>,
-  //   )
-  // }
   if (AppConfig().Mode == 'local') {
     navInstance.render(
       <React.StrictMode>
@@ -302,6 +288,12 @@ async function main() {
     console.log(clickedNode.classList)
     console.log(clickedNode.parentNode.classList.contains('card'))
     console.log(clickedNode.closest('card'))
+
+    /** This Injects the buttons into my script 
+     * if the app is disabled dont render the injected buttons
+     * 
+     * 
+    */
     if (!myButtons.includes(clickedNode.textContent) && clickedNode.className !== 'card draggable resizable' && !clickedNode.parentNode.classList.contains('card') && !clickedNode.classList.contains('dontTrack') && !hasParrentWithClassResult) {
       if (disabled == false) {
         clickedNode.parentNode.insertBefore(buttonContainer, clickedNode);

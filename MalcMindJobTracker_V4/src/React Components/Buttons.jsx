@@ -190,12 +190,6 @@ console.log(manipulationResults)
 }
 
 
-
-
-
-
-
-    console.log('this was triggered')
     // let originNode = AppConfig().getClickedEvent()
     // console.log(originNode.target.textContent)
     console.log('## AI button clicked')
