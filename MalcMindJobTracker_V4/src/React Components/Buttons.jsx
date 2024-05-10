@@ -128,12 +128,45 @@ let findItem = megaQuestionList.find(x => x.question.replace(/\*/g, '') == quest
       if(option){
         manipulationResults.push({question: question, answer: option.value})
         console.log(findItem.label.value)
+        findItem.label.click()
+        findItem.label.focus()
         findItem.label.value = option.value
       }
     }
     else{
       manipulationResults.push({question: question, answer: item.response})
-     findItem.label.value = item.response
+      findItem.label.click()
+      findItem.label.focus()
+      simulateTyping(item.response, findItem.label)
+      function simulateTyping(text, fieldItem) {
+        const input = fieldItem;
+        input.focus(); // Focus on the input before typing
+
+        // Iterate through each character in the text
+        for (let i = 0; i < text.length; i++) {
+            // Create a new event for each character, mimicking a keypress
+            const event = new KeyboardEvent('keydown', {
+                key: text[i],
+                keyCode: text[i].charCodeAt(0), // Deprecated but still used in some browsers
+                which: text[i].charCodeAt(0), // Deprecated but still used in some browsers
+                altKey: false,
+                ctrlKey: false,
+                shiftKey: false,
+                metaKey: false
+            });
+
+            // Dispatch the event on the input element
+            input.dispatchEvent(event);
+
+            // Update the value of the input field
+            input.value += text[i];
+
+            // Create and dispatch an 'input' event since changing input value via script does not trigger it
+            const inputEvent = new Event('input', { bubbles: true });
+            input.dispatchEvent(inputEvent);
+        }
+    }
+    //  findItem.label.value = item.response
     }
   }
   console.log(question)
