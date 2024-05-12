@@ -158,14 +158,14 @@ async function hideButtons(){
   if (AppConfig().Mode == 'local') {
     navInstance.render(
       <React.StrictMode>
-        <NavBar disable={disable} enable={enable} buttonsHidden={hideButtons} buttonsDisabled={buttonsDisabled} />
+        <NavBar disable={disable} enable={enable} buttonsHidden={hideButtons} buttonsDisabled={buttonsDisabled} mode={AppConfig().Mode} />
       </React.StrictMode>,
     )
   }
   if (disableStatus == "false") {
     navInstance.render(
       <React.StrictMode>
-        <NavBar disable={disable} enable={enable} buttonsHidden={hideButtons} buttonsDisabled={buttonsDisabled}/>
+        <NavBar disable={disable} enable={enable} buttonsHidden={hideButtons} buttonsDisabled={buttonsDisabled} mode={AppConfig().Mode}/>
       </React.StrictMode>,
     )
   }

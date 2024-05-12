@@ -225,7 +225,12 @@ console.log(manipulationResults)
 
   const randomNumber = Math.random();
 
-
+  function removeButtons() {
+    let buttonContainer = document.querySelectorAll('.button-container');
+    buttonContainer.forEach(function (button) {
+        button.remove();
+    });
+}
   return (
     <div key={randomNumber}>
       <div className='flex flex-wrap gap-5 justify-center bg-green-200 p-2'>
@@ -234,7 +239,8 @@ console.log(manipulationResults)
         <button className='btn btn-sm ' onClick={(e) => handleData(e)}>Company</button>
         <button className='btn btn-sm ' onClick={(e) => handleData(e)}>Job_Description</button>
         {/* <button className='btn btn-sm ' onClick={deleteButtons}>Remove Buttons</button> */}
-        <button className='btn btn-sm ' onClick={()=> disable()}>Disable App</button>
+        <button className='btn btn-sm ' onClick={()=> removeButtons()}>Collapse</button>
+        {/* <button className='btn btn-sm ' onClick={()=> disable()}>Disable App</button> */}
       </div>
     </div>
   )
