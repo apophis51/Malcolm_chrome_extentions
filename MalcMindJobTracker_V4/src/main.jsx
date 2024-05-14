@@ -11,15 +11,15 @@ import AppConfig from './AppConfig.jsx';
 async function main() {
   //APP starts at an unkown state and we activate it by default if the user has it freshly installed, but will disable upon user icon request and we need a way for our program to track it
   console.log('triggered')
-  let buttonsDisabled = await AppConfig().buttonStatus() //can be true or false
-  let disableStatus = await AppConfig().disableStatus()  //can be true or false
+  let buttonsDisabled = await AppConfig().buttonStatus() //can be "true" or "false"
+  let disableStatus = await AppConfig().disableStatus()  //can be "tru"e or "false"
     if (disableStatus == undefined || disableStatus == null) {
       await AppConfig().storageDisableFalse()  
-      disableStatus = false
+      disableStatus = "false"
     }
     if (buttonsDisabled == undefined || buttonsDisabled == null) {
       await AppConfig().storageHideButtonsFalse() 
-      buttonsDisabled = false
+      buttonsDisabled = "false"
     }
  console.log(disableStatus)
 // The chrome Runtime always needs to know if our status is enabled or disabled
@@ -28,29 +28,18 @@ async function main() {
       console.log('message recieved from worker', message)
       const bodyText = document.body.innerText;
       if (message.action == "DoWeNeedAReload") {
+        //get a fresh disable status when this query is ran
+        disableStatus = await AppConfig().disableStatus()
         if (disableStatus == "true" && (bodyText.includes("Work Search App"))) {
           console.log('### the text was found!')
-          chrome.runtime.sendMessage({ action: "reload" })
+          // chrome.runtime.sendMessage({ action: "reload" })
+          disable()
         }
         if (disableStatus == "false" && !(bodyText.includes("Work Search App"))) {
           console.log('### the text was not found!')
-          chrome.runtime.sendMessage({ action: "reload" })
+          // chrome.runtime.sendMessage({ action: "reload" })
+          main()
         }
-      };
-      if (message.action == "getDisabledStatus") {
-        // try {
-        //   await chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        //     var currentTab = tabs[0];
-        //     console.log('Current Tab:', currentTab);
-        //     // You can now use currentTab.id or other tab properties
-        //   });
-        // }
-
-        // catch (error) {
-        //   console.log('tabs from main failed', error)
-        // }
-        console.log("######### we are sending our disabled status")
-        chrome.runtime.sendMessage({ action: "disabledStatus", value: disableStatus })
       };
     });
   }

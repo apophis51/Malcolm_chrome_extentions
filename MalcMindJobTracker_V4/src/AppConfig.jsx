@@ -25,20 +25,21 @@ async function authorizedStatus(url) {
     console.log(authorized)
 
     if (authorized) {
-      console.log('route hit')
       return true
     }
     else {
-      console.log('route hit')
       return false
     }
   }
 }
 
+async function codeLogger(message,onOff,type,flavor){
+
+}
+
 export default function AppConfig(mode = 'local') {
   console.log("chrome.storage status:",chrome.storage)
   if (chrome.storage != undefined) mode = 'production'
-  // console.log('cool')
   // let testLocalStatus = await fetch('http://localhost:5173')
   // console.log(mode)
   // console.log(testLocalStatus.status)
@@ -71,7 +72,8 @@ export default function AppConfig(mode = 'local') {
       isAuthorized: (() => authorizedStatus('http://localhost:3532/userMap')),
       // getJobs: (() => fetch('https://malcmind-strapi-cms-production.up.railway.app/api/job-searches?pagination[page]=1&pagination[pageSize]=80&filters[userEmail][$eqi]=malcolmxvernon@hotmail.com')),
       // get_AI_URL: (()=> fetch('http://localhost:3000/Work-Search-App/groqAPI'))
-      get_AI_URL: 'http://localhost:3000/Work-Search-App/groqAPI'
+      get_AI_URL: 'http://localhost:3000/Work-Search-App/groqAPI',
+      codeLogger: (()=> codeLogger())
 
     };
   }
@@ -112,7 +114,8 @@ export default function AppConfig(mode = 'local') {
       idGeneratorURL: 'https://malcmind.com/Work-Search-App/Authorize/api',
       generateID: (() => generateId()),
       isAuthorized: (() => authorizedStatus('https://cryptoai-production.up.railway.app/userMap')),
-      get_AI_URL: 'https://malcmind.com/Work-Search-App/groqAPI'
+      get_AI_URL: 'https://malcmind.com/Work-Search-App/groqAPI',
+      codeLogger: (()=> codeLogger())
 
     };
   }

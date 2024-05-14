@@ -33,7 +33,6 @@ export default function ApplicationTracker() {
     const socketData = useRef(null)
 
    
-    // console.log(webSocketData)
 
     //he socket && part in the condition is a defensive check to make sure that socket is not null or undefined. Without this check, if socket is null (for example, during the initial render before the WebSocket connection is established), attempting to access socket.readyState would result in an error, causing your application to crash.
     // if (socket && socket.readyState === WebSocket.OPEN) {
@@ -85,7 +84,7 @@ export default function ApplicationTracker() {
                     'Authorization': extentionIdentifier, // Add any other headers as needed
                     // Add any other headers as needed
                 },
-                body: JSON.stringify(exportDataState) // Convert the data to a JSON string
+                body: JSON.stringify(exportDataState) 
             })
 
             const data = await results.json(); // Note the additional 'await' here
