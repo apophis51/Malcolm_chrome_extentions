@@ -18,7 +18,7 @@ const formattedDate = `${year}-${month}-${day}`;
 console.log('Current Date:', formattedDate);
 
 
-export const exportedDate =  atom(formattedDate) 
+// export const exportedDate =  atom(formattedDate) 
 
 
 
@@ -27,3 +27,4 @@ export const exportData = atom({data: {Job_Title: 'Click on a Job Posting Title 
 export const postingUrlSet = atom(false)
 
 export const loggedIn = atom(false)
+export const jobDescription = atom('jobMode')

@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import interact from 'interactjs'
 import AppConfig from '../AppConfig'
 
-import { atom, useAtom } from 'jotai'
-import { exportData, loggedIn } from './Atoms.js'
+import { atom, useAtom, useSetAtom } from 'jotai'
+import { exportData, loggedIn, jobDescription } from './Atoms.js'
 
 const position = { x: 0, y: 0 }
 
@@ -29,9 +29,12 @@ export default function ApplicationTracker() {
     const [exportDataState, setExportDataState] = useAtom(exportData)
     const [socket, setSocket] = useState(null);
     const [LoggedIn, setLoggedIn] = useAtom(loggedIn)
+    const [jobModeColor, setJobModeColor]= useState('bg-blue-200')
+    const [rejectionModeColor, setRejectionModeColor]= useState('bg-white')
+    const setDescription = useSetAtom(jobDescription)
     // const [webSocketData, setWebSocketData] = useState(null);
     const socketData = useRef(null)
-
+ console.log('triggered')
    
 
     //he socket && part in the condition is a defensive check to make sure that socket is not null or undefined. Without this check, if socket is null (for example, during the initial render before the WebSocket connection is established), attempting to access socket.readyState would result in an error, causing your application to crash.
@@ -104,6 +107,26 @@ export default function ApplicationTracker() {
             console.log('we have an error', error)
         }
     }
+    console.log('triggered')
+    
+
+    async function applicationMode() {
+        console.log('trig')
+        if(jobModeColor == 'bg-white'){
+            console.log('trig')
+        setJobModeColor('bg-blue-200')
+        setRejectionModeColor('bg-white')
+        setDescription('jobMode')
+        }
+        else if(jobModeColor == 'bg-blue-200'){
+            console.log('trig')
+            setJobModeColor('bg-white')
+            setRejectionModeColor('bg-blue-200')
+            setDescription('rejectionMode')
+            console.log('trig')
+        }
+        
+    }
 
     const handleStyle = () => {
         return {
@@ -126,16 +149,21 @@ export default function ApplicationTracker() {
                 {/* {boxPosition.x} {boxPosition.y} */}
             </p>
             <div
-                className="card draggable resizable dontTrack bg-green-700 text-white border-2 border-green-900 " 
+                className="card draggable resizable dontTrack bg-green-600 text-white border-2 border-green-900 " 
                 style={{
                     position: 'fixed',
                     ...handleStyle(),
                 }}>
-                <p className="flex justify-center text-xl bg-slate-600 rounded-lg">Application Tracker</p>
-                <h1 className='text-xl flex justify-center bg-slate-600'>Data Display</h1>
-                <button className='btn btn-sm bg-red-200' onClick={submitJobListing}>
-                    Submit To Applied Jobs
+                <p className="flex justify-center text-xl bg-slate-700 rounded-lg">Application Tracker</p>
+                <h1 className='text-xl flex justify-center bg-slate-700 text-white'>Data Display</h1>
+                <div className="flex justify-center bg-slate-600 gap-1 pb-4 pt-4">
+                <p className={`btn btn-sm hover:bg-blue-200 ${jobModeColor}`} onClick={applicationMode}>Job Mode</p><p className={`btn btn-sm ${rejectionModeColor} hover:bg-blue-200`} onClick={applicationMode}>Rejection Mode</p>
+                </div>
+                <div className="flex justify-center bg-slate-600">
+                <button className='btn btn-sm bg-red-200 mb-5' onClick={submitJobListing}>
+                    Update Applied Jobs
                 </button>
+                </div>
                 {!LoggedIn && <p className='bg-red-600'>You Must Click the Activate Menu on the Nav to Submit</p>}
                 <ul className = 'overflow-y-scroll divide-y-2 p-2'>
                     {Object.entries(exportDataState.data).map(([key, value]) => (

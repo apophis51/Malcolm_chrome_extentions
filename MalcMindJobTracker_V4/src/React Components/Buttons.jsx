@@ -7,13 +7,13 @@
 // import './App.css'
 import React from 'react'
 import '../index.css'
-import { atom, useAtom } from 'jotai'
-import {  exportData, postingUrlSet } from './Atoms.js'
+import { atom, useAtom,useAtomValue } from 'jotai'
+import {  exportData, postingUrlSet, jobDescription } from './Atoms.js'
 import  AppConfig  from '../AppConfig.jsx'
 
 
 
-import { useRef, useEffect } from 'react';  //new
+import { useRef, useEffect, useMemo } from 'react';  //new
 
 // export default function Buttons({test}) {
 //     const shadowRef = useRef();
@@ -45,14 +45,15 @@ import { useRef, useEffect } from 'react';  //new
 //   return <div ref={shadowRef}></div>;
 // };
 let initialtarget = null
-
 export default function Buttons({ documentText,disable }) {
 
   const [exportDataState, setExportDataState] = useAtom(exportData)
   const [postingUrl, setPostingUrl] = useAtom(postingUrlSet)
+   //const buttonDescriptions = useMemo(() => useAtomValue(jobDescription), [jobDescription])
+   const buttonDescriptions = useAtomValue(jobDescription)
   console.log(documentText.textContent)
   console.log(exportDataState)
-
+console.log(buttonDescriptions)
   // function deleteButtons(){
   //   let removeButtons = document.querySelectorAll('.button-container');
   //   removeButtons.forEach(function(button) {
@@ -231,6 +232,12 @@ console.log(manipulationResults)
         button.remove();
     });
 }
+console.log('triggered')
+
+// useEffect(() => {
+//   console.log('the button descriptions were changed')
+// }, [buttonDescriptions])
+
   return (
     <div key={randomNumber}>
       <div className='flex flex-wrap gap-5 justify-center bg-green-200 p-2'>
