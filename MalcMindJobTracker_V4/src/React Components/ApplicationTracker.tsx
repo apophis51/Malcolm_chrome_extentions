@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, DO_NOT_USE_OR_YOU_WILL_BE_FIRED_EXPERIMENTAL_FORM_ACTIONS } from 'react';
 import interact from 'interactjs'
 import AppConfig from '../AppConfig'
 
 import { atom, useAtom, useSetAtom } from 'jotai'
-import { exportData, loggedIn, jobDescription } from './Atoms.js'
-
+import { exportData, loggedIn } from './Atoms.js'
+import React from "react";
 const position = { x: 0, y: 0 }
 
 interact('.draggable').draggable({
@@ -31,7 +31,6 @@ export default function ApplicationTracker() {
     const [LoggedIn, setLoggedIn] = useAtom(loggedIn)
     const [jobModeColor, setJobModeColor]= useState('bg-blue-200')
     const [rejectionModeColor, setRejectionModeColor]= useState('bg-white')
-    const setDescription = useSetAtom(jobDescription)
     // const [webSocketData, setWebSocketData] = useState(null);
     const socketData = useRef(null)
  console.log('triggered')
@@ -70,18 +69,27 @@ export default function ApplicationTracker() {
         };
     }, [LoggedIn]);
 
+    type getOrPost = 'POST' | 'GET'
 
-    async function submitJobListing() {
+    async function JobListingHandler({postType}) {
+        let getOrPost: getOrPost = postType
+        let url = AppConfig()!.jobApiURL
+        if (postType == 'POST') {
+            getOrPost = 'POST'
+        }
+        if (postType == 'getRjections') {
+            getOrPost = 'GET'
+            url = AppConfig()!.rejectionApiURL  
+        }
         if(LoggedIn === false){
             return null
         }
         try {
-            const url = AppConfig().jobApiURL
             console.log(exportDataState)
             let extentionIdentifier = await AppConfig().idStatus()
             console.log("sending with auth id", extentionIdentifier)
             let results = await fetch(url, {
-                method: 'POST',
+                method: getOrPost,
                 headers: {
                     'Content-Type': 'application/json', // Set the content type if you're sending JSON data
                     'Authorization': extentionIdentifier, // Add any other headers as needed
@@ -107,23 +115,18 @@ export default function ApplicationTracker() {
             console.log('we have an error', error)
         }
     }
-    console.log('triggered')
     
-
     async function applicationMode() {
-        console.log('trig')
-        if(jobModeColor == 'bg-white'){
-            console.log('trig')
+        let target = event!.target as HTMLElement
+        let modeSelected = target.textContent
+
+        if(modeSelected == 'Job Mode'){
         setJobModeColor('bg-blue-200')
         setRejectionModeColor('bg-white')
-        setDescription('jobMode')
         }
-        else if(jobModeColor == 'bg-blue-200'){
-            console.log('trig')
-            setJobModeColor('bg-white')
+        else if(modeSelected == 'Rejection Mode'){
             setRejectionModeColor('bg-blue-200')
-            setDescription('rejectionMode')
-            console.log('trig')
+            setJobModeColor('bg-white')
         }
         
     }
@@ -160,7 +163,7 @@ export default function ApplicationTracker() {
                 <p className={`btn btn-sm hover:bg-blue-200 ${jobModeColor}`} onClick={applicationMode}>Job Mode</p><p className={`btn btn-sm ${rejectionModeColor} hover:bg-blue-200`} onClick={applicationMode}>Rejection Mode</p>
                 </div>
                 <div className="flex justify-center bg-slate-600">
-                <button className='btn btn-sm bg-red-200 mb-5' onClick={submitJobListing}>
+                <button className='btn btn-sm bg-red-200 mb-5' onClick={() => JobListingHandler({postType: 'POST'})}>
                     Update Applied Jobs
                 </button>
                 </div>

@@ -73,7 +73,8 @@ export default function AppConfig(mode = 'local') {
       // getJobs: (() => fetch('https://malcmind-strapi-cms-production.up.railway.app/api/job-searches?pagination[page]=1&pagination[pageSize]=80&filters[userEmail][$eqi]=malcolmxvernon@hotmail.com')),
       // get_AI_URL: (()=> fetch('http://localhost:3000/Work-Search-App/groqAPI'))
       get_AI_URL: 'http://localhost:3000/Work-Search-App/groqAPI',
-      codeLogger: (()=> codeLogger())
+      codeLogger: (()=> codeLogger()),
+      get_Job_Rejections: 'http://localhost:3000/Work-Search-App/api-job-rejections',
 
     };
   }
@@ -115,7 +116,8 @@ export default function AppConfig(mode = 'local') {
       generateID: (() => generateId()),
       isAuthorized: (() => authorizedStatus('https://cryptoai-production.up.railway.app/userMap')),
       get_AI_URL: 'https://malcmind.com/Work-Search-App/groqAPI',
-      codeLogger: (()=> codeLogger())
+      codeLogger: (()=> codeLogger()),
+      get_Job_Rejections: 'https://malcmind.com/Work-Search-App/api-job-rejections',
 
     };
   }

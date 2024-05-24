@@ -8,12 +8,12 @@
 import React from 'react'
 import '../index.css'
 import { atom, useAtom,useAtomValue } from 'jotai'
-import {  exportData, postingUrlSet, jobDescription } from './Atoms.js'
+import {  exportData, postingUrlSet } from './Atoms.js'
 import  AppConfig  from '../AppConfig.jsx'
 
 
 
-import { useRef, useEffect, useMemo } from 'react';  //new
+import { useRef, useEffect, useMemo, useState } from 'react';  //new
 
 // export default function Buttons({test}) {
 //     const shadowRef = useRef();
@@ -45,15 +45,22 @@ import { useRef, useEffect, useMemo } from 'react';  //new
 //   return <div ref={shadowRef}></div>;
 // };
 let initialtarget = null
+let jobMode = null
 export default function Buttons({ documentText,disable }) {
 
   const [exportDataState, setExportDataState] = useAtom(exportData)
   const [postingUrl, setPostingUrl] = useAtom(postingUrlSet)
    //const buttonDescriptions = useMemo(() => useAtomValue(jobDescription), [jobDescription])
-   const buttonDescriptions = useAtomValue(jobDescription)
+
+   if(documentText.textContent == 'Job Mode' && jobMode != 'Job Mode'){
+    jobMode = 'Job Mode'
+    }
+    else if(documentText.textContent == 'Rejection Mode' && jobMode != 'Rejection Mode'){
+      jobMode = 'Rejection Mode'
+    }
   console.log(documentText.textContent)
   console.log(exportDataState)
-console.log(buttonDescriptions)
+console.log(jobMode)
   // function deleteButtons(){
   //   let removeButtons = document.querySelectorAll('.button-container');
   //   removeButtons.forEach(function(button) {
@@ -244,6 +251,7 @@ console.log('triggered')
       <button className=' btn btn-sm bg-red-300' onClick={() => handleAI()}>AI</button>
         <button className=' btn btn-sm btn-active btn-accent' onClick={(e) => handleData(e)}>Job_Title</button>
         <button className='btn btn-sm ' onClick={(e) => handleData(e)}>Company</button>
+        <button className='btn btn-sm ' onClick={(e) => handleData(e)}>Rejection_Message</button>
         <button className='btn btn-sm ' onClick={(e) => handleData(e)}>Job_Description</button>
         {/* <button className='btn btn-sm ' onClick={deleteButtons}>Remove Buttons</button> */}
         <button className='btn btn-sm ' onClick={()=> removeButtons()}>Collapse</button>

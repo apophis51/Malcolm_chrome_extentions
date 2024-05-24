@@ -4,7 +4,7 @@ import Buttons from './React Components/Buttons.jsx'
 import NavBar from './React Components/NavBar.tsx'
 import { createRoot } from 'react-dom/client'
 import * as buttonUtils from './VanillaUtils/buttonUtils.js';
-import ApplicationTracker from './React Components/ApplicationTracker.jsx'
+import ApplicationTracker from './React Components/ApplicationTracker'
 
 import AppConfig from './AppConfig.jsx';
 
@@ -207,7 +207,6 @@ async function hideButtons(){
     // Get the target node that was clicked
     var clickedNode = event.target;
     let documentText = clickedNode.textContent
-
 
     ///a recursive function that traverses the DOM hierarchy.
     //gpt prompt how do i search through all parrent nodes in the dom to see if any contains a specific classname?
