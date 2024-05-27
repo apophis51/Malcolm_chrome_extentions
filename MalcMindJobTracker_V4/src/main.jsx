@@ -4,7 +4,7 @@ import Buttons from './React Components/Buttons.jsx'
 import NavBar from './React Components/NavBar.tsx'
 import { createRoot } from 'react-dom/client'
 import * as buttonUtils from './VanillaUtils/buttonUtils.js';
-import ApplicationTracker from './React Components/ApplicationTracker'
+import ApplicationTracker from './React Components/ApplicationTracker.tsx'
 
 import AppConfig from './AppConfig.jsx';
 
