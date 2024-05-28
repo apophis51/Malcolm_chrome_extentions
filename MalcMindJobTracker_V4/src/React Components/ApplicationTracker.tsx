@@ -165,7 +165,7 @@ export default function ApplicationTracker() {
         let target = event!.target as HTMLElement
         let modeSelected = target.textContent
 
-        if (modeSelected == 'Job Mode') {
+        if (modeSelected == 'Apply Mode') {
             setJobModeColor('bg-blue-200')
             setRejectionModeColor('bg-white')
             setExportDataState({ data: { Job_Title: 'Click on a Job Posting Title to Add a Title', Company: 'Click on a Company Name to Add a Company', Job_Description: 'Click on a Job Description to Add a Description', Applied_Date: createADate() } })
@@ -233,7 +233,7 @@ export default function ApplicationTracker() {
                 <p className="flex justify-center text-xl bg-slate-700 rounded-xl">Application Tracker</p>
                 <h1 className='text-xl flex justify-center bg-slate-700 text-white'>Data Display</h1>
                 <div className="flex justify-center bg-slate-600 gap-1  pt-4">
-                    <p className={`btn btn-sm hover:bg-blue-200 ${jobModeColor}`} onClick={applicationMode}>Job Mode</p><p className={`btn btn-sm ${rejectionModeColor} hover:bg-blue-200`} onClick={applicationMode}>Rejection Mode</p>
+                    <p className={`btn btn-sm hover:bg-blue-200 ${jobModeColor}`} onClick={applicationMode}>Apply Mode</p><p className={`btn btn-sm ${rejectionModeColor} hover:bg-blue-200`} onClick={applicationMode}>Rejection Mode</p>
                 </div>
                 <div className='text-black pt-3 pb-3 bg-slate-600'>
                     {rejectionModeOn && <Select options={retrievedJobs} placeholder={'Select a company'} onChange={(result) => { updateDisplayedJobs(result) }} />}

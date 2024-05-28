@@ -52,8 +52,8 @@ export default function Buttons({ documentText,disable }) {
   const [postingUrl, setPostingUrl] = useAtom(postingUrlSet)
    //const buttonDescriptions = useMemo(() => useAtomValue(jobDescription), [jobDescription])
 
-   if(documentText.textContent == 'Job Mode' && jobMode != 'Job Mode'){
-    jobMode = 'Job Mode'
+   if(documentText.textContent == 'Apply Mode' && jobMode != 'Apply Mode'){
+    jobMode = 'Apply Mode'
     }
     else if(documentText.textContent == 'Rejection Mode' && jobMode != 'Rejection Mode'){
       jobMode = 'Rejection Mode'
