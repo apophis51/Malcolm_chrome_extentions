@@ -1,6 +1,6 @@
 import {atom} from 'jotai'
 
-
+export function createADate(){
 
 
 // Create a new Date object representing the current date and time
@@ -16,13 +16,14 @@ const formattedDate = `${year}-${month}-${day}`;
 
 // Log the formatted date
 console.log('Current Date:', formattedDate);
-
+return formattedDate
+}
 
 // export const exportedDate =  atom(formattedDate) 
 
 
 
-export const exportData = atom({data: {Job_Title: 'Click on a Job Posting Title to Add a Title', Applied_Date: formattedDate, Company: 'Click on a Company Name to Add a Company', Job_Description: 'Click on a Job Description to Add a Description',}})
+export const exportData = atom({data: {Job_Title: 'Click on a Job Posting Title to Add a Title', Applied_Date: createADate(), Company: 'Click on a Company Name to Add a Company', Job_Description: 'Click on a Job Description to Add a Description',}})
 
 export const postingUrlSet = atom(false)
 

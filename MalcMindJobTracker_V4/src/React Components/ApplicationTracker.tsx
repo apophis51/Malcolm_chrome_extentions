@@ -3,8 +3,10 @@ import interact from 'interactjs'
 import AppConfig from '../AppConfig'
 import Select from 'react-select'
 import { atom, useAtom, useSetAtom } from 'jotai'
-import { exportData, loggedIn } from './Atoms.js'
+import { exportData, loggedIn, createADate } from './Atoms.js'
 import React from "react";
+console.log = function () { }
+
 const position = { x: 0, y: 0 }
 
 interact('.draggable').draggable({
@@ -41,7 +43,7 @@ export default function ApplicationTracker() {
     const [retrievedJobs, setRetrievedJobs] = useState(null)
     // const [webSocketData, setWebSocketData] = useState(null);
     const socketData = useRef<WebSocketMessage | null>(null)
-    console.log('triggered')
+    let rejectionModeOn = rejectionModeColor != 'bg-white'
 
 
     useEffect(() => {
@@ -65,7 +67,7 @@ export default function ApplicationTracker() {
         };
     }, [LoggedIn]);
 
-    type getOrPost = 'POST' | 'GET'
+    type getOrPost = 'POST' | 'GET' | 'PUT'
 
     /**
      * 
@@ -83,6 +85,19 @@ export default function ApplicationTracker() {
             getOrPost = 'GET'
             url = AppConfig()!.get_Job_Rejections
             bodyType = null
+        }
+        if (postType == 'PUT') {
+            getOrPost = 'PUT'
+            url = AppConfig()!.get_Job_Rejections
+            bodyType = JSON.stringify({
+                output: {
+                    data: {
+                        Rejection_Message: exportDataState.data.Rejection_Message
+                    }
+                },
+                UID: exportDataState.data.id
+            })
+            console.log(bodyType)
         }
         if (LoggedIn === false) {
             return null
@@ -107,25 +122,27 @@ export default function ApplicationTracker() {
             console.log(prevJobs)
             console.log(exportDataState)
             console.log(await prevJobs.data)
-            const regex = /[a-zA-Z ]+/g;
-            let tempData = []
-            prevJobs.data.information.data.map((item) => {
-                const matches = (item.attributes.Company).match(/[a-zA-Z ]+/g)
-                if (matches) {
-                    console.log(matches.join('').trim())
-                    tempData.push({ value: (matches.join('').trim()), label: (matches.join('').trim()) })
-                }
-                console.log(item.attributes.Company)
-            })
+            if (getOrPost == 'GET') {
+                let tempData = []
+                prevJobs.data.information.data.forEach((item) => {
+                    const matches = (item.attributes.Company).match(/[a-zA-Z1-9 ]+/g)
+                    if (matches) {
+                        console.log(matches.join('').trim())
+                        tempData.push({ value: (matches.join('').trim()), label: (matches.join('').trim()) })
+                    }
+                    console.log(item.attributes.Company)
+                })
+                console.log('hit')
+                console.log(tempData)
+                setRetrievedJobs(tempData)
+            }
             console.log('hit')
-            console.log(tempData)
-            setRetrievedJobs(tempData)
-
-            if (getOrPost == 'POST') {
+            if (getOrPost == 'POST' || getOrPost == 'PUT') {
                 updateWebSocketData()
             }
             function updateWebSocketData() {
                 //the socket && part in the condition is a defensive check to make sure that socket is not null or undefined. Without this check, if socket is null (for example, during the initial render before the WebSocket connection is established), attempting to access socket.readyState would result in an error, causing your application to crash.
+                console.log('triggered')
                 if (socket && socket.readyState === WebSocket.OPEN) {
                     console.log('triggered')
                     socket.send(JSON.stringify({ type: 'jobmessage', data: exportDataState }));
@@ -151,6 +168,7 @@ export default function ApplicationTracker() {
         if (modeSelected == 'Job Mode') {
             setJobModeColor('bg-blue-200')
             setRejectionModeColor('bg-white')
+            setExportDataState({ data: { Job_Title: 'Click on a Job Posting Title to Add a Title', Company: 'Click on a Company Name to Add a Company', Job_Description: 'Click on a Job Description to Add a Description', Applied_Date: createADate() } })
         }
         else if (modeSelected == 'Rejection Mode') {
             setRejectionModeColor('bg-blue-200')
@@ -159,6 +177,30 @@ export default function ApplicationTracker() {
         }
 
     }
+
+    function updateDisplayedJobs(selectedResult) {
+        console.log('cool', selectedResult.value)
+        console.log(prevJobs)
+        let functionRam = null
+        prevJobs.data.information.data.forEach((item) => {
+            const matches = (item.attributes.Company).match(/[a-zA-Z1-9 ]+/g)
+            if (matches) {
+                if (matches.join('').trim() == selectedResult.value) {
+                    console.log(item)
+                    console.log(exportDataState)
+
+                    console.log(item.attributes.Company)
+                    setExportDataState((prevData) => ({
+                        ...prevData,
+                        data: { ...prevData.data, Job_Title: item.attributes.Job_Title, Rejection_Message: item.attributes.Rejection_Message, Applied_Date: item.attributes.Applied_Date, Company: item.attributes.Company, Job_Description: item.attributes.Job_Description, id: item.id },
+                    }))
+                    console.log(exportDataState)
+                }
+            }
+        })
+
+    }
+
 
     const handleStyle = () => {
         return {
@@ -193,10 +235,10 @@ export default function ApplicationTracker() {
                 <div className="flex justify-center bg-slate-600 gap-1  pt-4">
                     <p className={`btn btn-sm hover:bg-blue-200 ${jobModeColor}`} onClick={applicationMode}>Job Mode</p><p className={`btn btn-sm ${rejectionModeColor} hover:bg-blue-200`} onClick={applicationMode}>Rejection Mode</p>
                 </div>
-                <div className='text-black pt-4 bg-slate-600'>
-                    {rejectionModeColor == 'bg-white' && <Select options={retrievedJobs} placeholder={'Select a company'} onChange={(result) => {console.log('cool', result)}}/>}
-                    </div>
-                <div className='flex justify-center bg-slate-600'>
+                <div className='text-black pt-3 pb-3 bg-slate-600'>
+                    {rejectionModeOn && <Select options={retrievedJobs} placeholder={'Select a company'} onChange={(result) => { updateDisplayedJobs(result) }} />}
+                </div>
+                {/* <div className='flex justify-center bg-slate-600'>
                     {rejectionModeColor != 'bg-white' &&
                         <select className="select select-bordered  max-w-[90%] mt-4 text-black ">
                             <option disabled selected>Select The Rejection Company</option>
@@ -207,11 +249,14 @@ export default function ApplicationTracker() {
                                 }
                             })}
                         </select>}
-                </div>
+                </div> */}
                 <div className="flex justify-center items-center bg-slate-600">
-                    <button className='btn btn-sm bg-red-200 m-5' onClick={() => JobListingHandler({ postType: 'POST' })}>
+                    {!rejectionModeOn && <button className='btn btn-sm bg-red-200 mb-5' onClick={() => JobListingHandler({ postType: 'POST' })}>
                         Update Applied Jobs
-                    </button>
+                    </button>}
+                    {rejectionModeOn && <button className='btn btn-sm bg-red-200 mb-5' onClick={() => JobListingHandler({ postType: 'PUT' })}>
+                        Update Job Rejection
+                    </button>}
                 </div>
                 {!LoggedIn && <p className='bg-red-600'>You Must Click the Activate Menu on the Nav to Submit</p>}
                 <ul className='overflow-y-scroll divide-y-2 p-2 bg-green-600'>
