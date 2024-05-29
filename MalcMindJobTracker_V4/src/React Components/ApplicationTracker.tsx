@@ -32,6 +32,30 @@ interface WebSocketMessage {
 interface ExportData {
     data: { [key: string]: any }; // Adjust the value type as per your specific needs
 }
+type messageObject = { status: statusMessage, tailwindClassColor: tailwindClassColor, loadingIcon: string}
+type statusMessage = 'Submitting Job' | 'Submission Error' | 'Submission Sucessful!' | 'Retrieving AI Answers' | 'AI Retrieval Sucessful' | 'AI Retrieval Error' | 'Retrieving User Job Data' | 'User Job Data Retrieval Success!' | 'User Data Retrieval Error' | 'null'
+type tailwindClassColor ='bg-orange-600' | 'bg-red-600' | 'bg-green-700' | 'null'
+
+function formatDisplayedStatusMessage(status: statusMessage){
+    let tailwindClassColor: tailwindClassColor
+    let loadingIcon = 'null'
+    if (status.includes('Error')) {
+        tailwindClassColor = 'bg-red-600'
+    }
+    else if(status.includes('Sucessful')) {
+        tailwindClassColor = 'bg-green-700'
+    }
+    else if(status == 'null'){
+        tailwindClassColor = 'null'
+    }
+    else{
+        tailwindClassColor = 'bg-orange-600'
+        loadingIcon = 'loading loading-spinner loading-sm'
+    }
+    console.log('hit promo')
+    console.log(status, tailwindClassColor)
+    return { status: status, tailwindClassColor: tailwindClassColor, loadingIcon}
+}
 
 let prevJobs = null
 export default function ApplicationTracker() {
@@ -41,6 +65,7 @@ export default function ApplicationTracker() {
     const [jobModeColor, setJobModeColor] = useState('bg-blue-200')
     const [rejectionModeColor, setRejectionModeColor] = useState('bg-white')
     const [retrievedJobs, setRetrievedJobs] = useState(null)
+    const [statusMessage, setStatusMessage] = useState<messageObject>({status: 'null', tailwindClassColor: 'null', loadingIcon: 'null'})
     // const [webSocketData, setWebSocketData] = useState(null);
     const socketData = useRef<WebSocketMessage | null>(null)
     let rejectionModeOn = rejectionModeColor != 'bg-white'
@@ -67,27 +92,30 @@ export default function ApplicationTracker() {
         };
     }, [LoggedIn]);
 
-    type getOrPost = 'POST' | 'GET' | 'PUT'
+    type fetchMethod = 'POST' | 'GET' | 'PUT'
 
     /**
      * 
      * This function is used to send data to our jobWebAPP or used to get data back
      */
     async function JobListingHandler({ postType }) {
-        let getOrPost: getOrPost = postType
+        let fetchMethod: fetchMethod = postType
         let url = AppConfig()!.jobApiURL
         let bodyType: any = null
+        console.log(postType)
         if (postType == 'POST') {
-            getOrPost = 'POST'
+            fetchMethod = 'POST'
+            setStatusMessage(formatDisplayedStatusMessage('Submitting Job'))
             bodyType = JSON.stringify(exportDataState)
         }
         if (postType == 'getRjections') {
-            getOrPost = 'GET'
+            fetchMethod = 'GET'
             url = AppConfig()!.get_Job_Rejections
+            setStatusMessage(formatDisplayedStatusMessage('Retrieving User Job Data'))
             bodyType = null
         }
         if (postType == 'PUT') {
-            getOrPost = 'PUT'
+            fetchMethod = 'PUT'
             url = AppConfig()!.get_Job_Rejections
             bodyType = JSON.stringify({
                 output: {
@@ -102,13 +130,13 @@ export default function ApplicationTracker() {
         if (LoggedIn === false) {
             return null
         }
-        console.log(url, getOrPost)
+        console.log(url, fetchMethod)
         try {
             console.log(exportDataState)
             let extentionIdentifier = await AppConfig()!.idStatus()
             console.log("sending with auth id", extentionIdentifier)
             let results = await fetch(url, {
-                method: getOrPost,
+                method: fetchMethod,
                 headers: {
                     'Content-Type': 'application/json', // Set the content type if you're sending JSON data
                     'Authorization': extentionIdentifier, // Add any other headers as needed
@@ -118,11 +146,17 @@ export default function ApplicationTracker() {
             })
             console.log(results)
             prevJobs = await results.json(); // Note the additional 'await' here
+            if(fetchMethod == 'GET'){
+            setStatusMessage(formatDisplayedStatusMessage('null'))
+            }
+            if(fetchMethod == 'POST'){
+                setStatusMessage(formatDisplayedStatusMessage('Submission Sucessful!'))
+            }
             // setRetrievedJobs(prevJobs)
             console.log(prevJobs)
             console.log(exportDataState)
             console.log(await prevJobs.data)
-            if (getOrPost == 'GET') {
+            if (fetchMethod == 'GET') {
                 let tempData = []
                 prevJobs.data.information.data.forEach((item) => {
                     const matches = (item.attributes.Company).match(/[a-zA-Z1-9 ]+/g)
@@ -132,12 +166,11 @@ export default function ApplicationTracker() {
                     }
                     console.log(item.attributes.Company)
                 })
-                console.log('hit')
                 console.log(tempData)
                 setRetrievedJobs(tempData)
             }
             console.log('hit')
-            if (getOrPost == 'POST' || getOrPost == 'PUT') {
+            if (fetchMethod == 'POST' || fetchMethod == 'PUT') {
                 updateWebSocketData()
             }
             function updateWebSocketData() {
@@ -259,6 +292,7 @@ export default function ApplicationTracker() {
                     </button>}
                 </div>
                 {!LoggedIn && <p className='bg-red-600'>You Must Click the Activate Menu on the Nav to Submit</p>}
+                {statusMessage.status != 'null' && <p className={`${statusMessage.tailwindClassColor} flex justify-center`}>{statusMessage.status} &nbsp;<span className={`${statusMessage.loadingIcon}`}></span></p>}
                 <ul className='overflow-y-scroll divide-y-2 p-2 bg-green-600'>
                     {Object.entries(exportDataState.data).map(([key, value]) => (
                         <li key={key}>

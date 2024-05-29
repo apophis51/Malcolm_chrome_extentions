@@ -268,14 +268,15 @@ async function hideButtons(){
     buttonContainer.appendChild(reactElement)
 
 
-
-
+//this logic guard is new *************** to prevent excessive renders
+if(!clickedNode.parentNode.classList.contains('dontTrack') && !clickedNode.classList.contains('dontTrack') && !hasParrentWithClassResult){
+  console.log('hit')
     reactInstance.render(
       <React.StrictMode>
         <Buttons documentText={clickedNode} disable={disable} />
       </React.StrictMode>,
     )
-
+  }
 
 
 
