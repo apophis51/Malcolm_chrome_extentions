@@ -5,7 +5,7 @@ import Select from 'react-select'
 import { atom, useAtom, useSetAtom } from 'jotai'
 import { exportData, loggedIn, createADate } from './Atoms.js'
 import React from "react";
-console.log = function () { }
+console.log = function () { } 
 
 const position = { x: 0, y: 0 }
 
@@ -33,7 +33,7 @@ interface ExportData {
     data: { [key: string]: any }; // Adjust the value type as per your specific needs
 }
 type messageObject = { status: statusMessage, tailwindClassColor: tailwindClassColor, loadingIcon: string}
-type statusMessage = 'Submitting Job' | 'Submission Error' | 'Submission Sucessful!' | 'Retrieving AI Answers' | 'AI Retrieval Sucessful' | 'AI Retrieval Error' | 'Retrieving User Job Data' | 'User Job Data Retrieval Success!' | 'User Data Retrieval Error' | 'null'
+type statusMessage = 'Submitting Job' | 'Submitting Job Rejection' | 'Submission Error' | 'Submission Sucessful!' | 'Retrieving AI Answers' | 'AI Retrieval Sucessful' | 'AI Retrieval Error' | 'Retrieving User Job Data' | 'User Job Data Retrieval Success!' | 'User Data Retrieval Error' | 'null'
 type tailwindClassColor ='bg-orange-600' | 'bg-red-600' | 'bg-green-700' | 'null'
 
 function formatDisplayedStatusMessage(status: statusMessage){
@@ -93,28 +93,30 @@ export default function ApplicationTracker() {
     }, [LoggedIn]);
 
     type fetchMethod = 'POST' | 'GET' | 'PUT'
+    type postType = 'getJobData' | 'submitNewJobRejection' | 'submitNewJobApplication'
 
     /**
      * 
      * This function is used to send data to our jobWebAPP or used to get data back
      */
-    async function JobListingHandler({ postType }) {
-        let fetchMethod: fetchMethod = postType
+    async function JobListingHandler({ postType } : { postType: postType }) {
+        let fetchMethod: fetchMethod
         let url = AppConfig()!.jobApiURL
         let bodyType: any = null
         console.log(postType)
-        if (postType == 'POST') {
+        if (postType == 'submitNewJobApplication') {
             fetchMethod = 'POST'
             setStatusMessage(formatDisplayedStatusMessage('Submitting Job'))
             bodyType = JSON.stringify(exportDataState)
         }
-        if (postType == 'getRjections') {
+        if (postType == 'getJobData') {
             fetchMethod = 'GET'
             url = AppConfig()!.get_Job_Rejections
             setStatusMessage(formatDisplayedStatusMessage('Retrieving User Job Data'))
             bodyType = null
         }
-        if (postType == 'PUT') {
+        if (postType == 'submitNewJobRejection') {
+            setStatusMessage(formatDisplayedStatusMessage('Submitting Job Rejection'))
             fetchMethod = 'PUT'
             url = AppConfig()!.get_Job_Rejections
             bodyType = JSON.stringify({
@@ -149,7 +151,7 @@ export default function ApplicationTracker() {
             if(fetchMethod == 'GET'){
             setStatusMessage(formatDisplayedStatusMessage('null'))
             }
-            if(fetchMethod == 'POST'){
+            if(fetchMethod == 'POST' || fetchMethod == 'PUT'){
                 setStatusMessage(formatDisplayedStatusMessage('Submission Sucessful!'))
             }
             // setRetrievedJobs(prevJobs)
@@ -190,6 +192,7 @@ export default function ApplicationTracker() {
             }
         }
         catch (error) {
+            setStatusMessage(formatDisplayedStatusMessage('Submission Error'))
             console.log('we have an error', error)
         }
     }
@@ -206,7 +209,7 @@ export default function ApplicationTracker() {
         else if (modeSelected == 'Rejection Mode') {
             setRejectionModeColor('bg-blue-200')
             setJobModeColor('bg-white')
-            JobListingHandler({ postType: 'getRjections' })
+            JobListingHandler({ postType: 'getJobData' })
         }
 
     }
@@ -284,10 +287,10 @@ export default function ApplicationTracker() {
                         </select>}
                 </div> */}
                 <div className="flex justify-center items-center bg-slate-600">
-                    {!rejectionModeOn && <button className='btn btn-sm bg-red-200 mb-5' onClick={() => JobListingHandler({ postType: 'POST' })}>
+                    {!rejectionModeOn && <button className='btn btn-sm bg-red-200 mb-5' onClick={() => JobListingHandler({ postType: 'submitNewJobApplication' })}>
                         Update Applied Jobs
                     </button>}
-                    {rejectionModeOn && <button className='btn btn-sm bg-red-200 mb-5' onClick={() => JobListingHandler({ postType: 'PUT' })}>
+                    {rejectionModeOn && <button className='btn btn-sm bg-red-200 mb-5' onClick={() => JobListingHandler({ postType: 'submitNewJobRejection' })}>
                         Update Job Rejection
                     </button>}
                 </div>
