@@ -10,7 +10,6 @@ import '../index.css'
 import { atom, useAtom,useAtomValue } from 'jotai'
 import {  exportData, postingUrlSet } from './Atoms.js'
 import  AppConfig  from '../AppConfig.jsx'
-import * as domUtils from './domUtils'
 
 
 
@@ -74,22 +73,11 @@ console.log(jobMode)
     let results = []
     let questionList= []
     let megaQuestionList = []
-    // let observer = new MutationObserver(domUtils.handleMutations);
-    // let observerConfig = { childList: true, subtree: true }
-    // observer.observe(document.body, observerConfig);
-    console.error(aiButtons)
-
     aiButtons.forEach(field => {
-
       console.log(field)
       // we also need to push the label to the data so we can reference it later  
       const label = document.querySelector(`label[for="${field.id}"]`) || field.closest('label') || field.parentElement;
-        field.focus()
-        field.dispatchEvent(domUtils.Mouseevent)
-        for (let i = 0; i < 1; i++) { // Example: 3 times to reach the desired option
-          domUtils.simulateKeydown(field, 'ArrowDown');
-      }
-      domUtils.simulateKeydown(field, 'Enter');
+        label.focus()
         const questionText = label ? label.textContent.trim() : "No label found";
         results.push({ field: field.outerHTML, question: questionText });
         try{
@@ -114,6 +102,7 @@ console.log(jobMode)
         }
      
         
+               autofillField(field, questionText);
 
     });
     let extentionIdentifier = await AppConfig().idStatus()
@@ -132,7 +121,7 @@ console.log(jobMode)
     console.log('this is the ai response', AI_ResponseJSON)
 
   console.log(questionList)
- console.log('megaQuestionList', megaQuestionList)
+ console.error('megaQuestionList', megaQuestionList)
 
 
 let manipulationResults = []
@@ -141,12 +130,12 @@ AI_ResponseJSON.data.information.forEach(item => {
   
 let findItem = megaQuestionList.find(x => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
   if(findItem){
-    console.log('we found a goodone')
+    console.error('we found a goodone')
     if(findItem.options){
       let option = findItem.options.find(x => x.textValue == item.response)
       if(option){
         manipulationResults.push({question: question, answer: option.value})
-        console.log(findItem.label.value)
+        console.error(findItem.label.value)
         findItem.label.click()
         findItem.label.focus()
         findItem.label.value = option.value
@@ -154,9 +143,8 @@ let findItem = megaQuestionList.find(x => x.question.replace(/\*/g, '') == quest
     }
     else{
       manipulationResults.push({question: question, answer: item.response})
-      
-      findItem.label.focus()
       findItem.label.click()
+      findItem.label.focus()
       simulateTyping(item.response, findItem.label)
       function simulateTyping(text, fieldItem) {
         const input = fieldItem;
@@ -192,7 +180,22 @@ let findItem = megaQuestionList.find(x => x.question.replace(/\*/g, '') == quest
   console.log(question)
 })
 console.log(manipulationResults)
-  
+  function autofillField(field, questionText) {
+    // Here you can define rules or data to fill the fields based on the question or field type
+    if (field.type === 'text') {
+        if (questionText.toLowerCase().includes('name')) {
+            // field.value = 'John Doe'; // Example name
+        } else if (questionText.toLowerCase().includes('email')) {
+            // field.value = 'john.doe@example.com'; // Example email
+        }
+    } else if (field.tagName.toLowerCase() === 'select') {
+        // Assume we always select the second option for demonstration
+        if (field.options.length > 1) {
+            // field.value = field.options[1].value;
+            // console.log(field.options[1].value)
+        }
+    }
+}
 
 
     // let originNode = AppConfig().getClickedEvent()
