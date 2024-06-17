@@ -121,7 +121,7 @@ console.log(jobMode)
     console.log('this is the ai response', AI_ResponseJSON)
 
   console.log(questionList)
- console.log('megaQuestionList', megaQuestionList)
+ console.error('megaQuestionList', megaQuestionList)
 
 
 let manipulationResults = []
@@ -130,12 +130,12 @@ AI_ResponseJSON.data.information.forEach(item => {
   
 let findItem = megaQuestionList.find(x => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
   if(findItem){
-    console.log('we found a goodone')
+    console.error('we found a goodone')
     if(findItem.options){
       let option = findItem.options.find(x => x.textValue == item.response)
       if(option){
         manipulationResults.push({question: question, answer: option.value})
-        console.log(findItem.label.value)
+        console.error(findItem.label.value)
         findItem.label.click()
         findItem.label.focus()
         findItem.label.value = option.value
