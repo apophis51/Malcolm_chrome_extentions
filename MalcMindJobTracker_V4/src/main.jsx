@@ -134,7 +134,7 @@ async function hideButtons(){
 
 
   // let exportData = {}
-
+  let deleteManipulation = document.getElementById('myIframe')
   let navDiv = document.createElement('div');
   let navInstance = createRoot(navDiv)
   let documentBody = document.querySelector('body')

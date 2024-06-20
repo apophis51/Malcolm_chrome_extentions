@@ -6,36 +6,62 @@ export const Mouseevent = new MouseEvent('mousedown', {
 });
 
 
-export function handleMutations(mutationsList, observer) {
-
-
-    mutationsList.forEach(mutation => {
+export function wrapperfunction(observedMutations, manipulate){
+    
+    return (
+        function handleMutations(mutationsList, observer) {
+            let Evaluate_These_Patterns = [
+                /\*/
+            ]
+            console.error('we had one run')
+            manipulate.value = 'fuck'
+            mutationsList.forEach(mutation => {
         
-            if (mutation.type === 'childList') {
-                // Iterate over added nodes
-                mutation.addedNodes.forEach(node => {
-                    // Check if the node is an element node (type 1) and read its text content
-                    if (node.nodeType === 1) {
-                        // console.log('New element added:', node.innerText);
-                        // console.log(node)
-                        let replay = node.innerText
-                        replay = replay.split(/\n/)
-                        console.error(node)
-                        // try{
-                        //     if (node.id = '#react-select-2-option-2') {
-                        //         node.focus()
-                        //         node.click()
-                        //         node.dispatchEvent(Mouseevent)
-                        //     }
-                        // }
-                        // catch   {}
+                if (mutation.type === 'childList') {
+                    // Iterate over added nodes
+                    mutation.addedNodes.forEach(node => {
+                        // Check if the node is an element node (type 1) and read its text content
+                        if (node.nodeType === 1) {
+                            let expressionTest = textExpression(node.innerText)
+                            function textExpression(expression) {
+                                let accumulator = []
+                                Evaluate_These_Patterns.forEach(pattern => {
+                                    accumulator.push(pattern.test(expression))
+                                })
+                                if (accumulator.includes(true)) {
+                                    return true
+                                }
+                                else {
+                                    return false
+                                }
+                            }
+        
+                            if (expressionTest == true) {
+                                let replay = node.innerText
+                                replay = replay.split(/\*/)
+                                // console.error(node)
+                                if (replay != '' && replay.length > 2) {
+                                    console.error(replay)
+                                    observedMutations.set(node, replay)
+                                    // observedMutations[node.innerText] = replay
+                                }
+                            }
+        
                         }
                     })
                 };
-
+        
             })
-      
-    };
+        
+        }
+    )
+  
+}
+
+
+
+
+
 
 
 
@@ -72,3 +98,22 @@ export function simulateKeydown(element, key) {
     });
     element.dispatchEvent(event);
 }
+
+
+export function triggerDomMutations(doc) {
+    let DOM_Input_Locations: any = doc.querySelectorAll('input , select, textarea')
+    DOM_Input_Locations.forEach(field => {
+    //   console.log(field)
+      // we also need to push the label to the data so we can reference it later  
+      const label = document.querySelector(`label[for="${field.id}"]`) || field.closest('label') || field.parentElement;
+      field.focus()
+       field.dispatchEvent(Mouseevent)
+    })
+   
+  }
+
+  export function sum(a, b) {
+    return a + b
+  }
+
+  
