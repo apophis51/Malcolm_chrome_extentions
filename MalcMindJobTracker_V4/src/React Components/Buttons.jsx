@@ -11,10 +11,11 @@ import { atom, useAtom, useAtomValue } from 'jotai'
 import { exportData, postingUrlSet } from './Atoms.js'
 import AppConfig from '../AppConfig.jsx'
 import * as domUtils from './domUtils'
-
-
+import  de_duplicate_array_of_objects  from './utils/array/de_duplicate_array_of_objects'
+import limit_max_object_property_string_size_in_array from './utils/array/limit_max_object_property_string_size_in_array'
 
 import { useRef, useEffect, useMemo, useState } from 'react';  //new
+
 
 // export default function Buttons({test}) {
 //     const shadowRef = useRef();
@@ -144,22 +145,40 @@ export default function Buttons({ documentText, disable }) {
 
 
     });
+
+    
     let extentionIdentifier = await AppConfig().idStatus()
-    let AI_Response = await fetch(AppConfig().get_AI_URL, {
+    let AI_Response = 'init'
+    console.error('full array is:', data_Sent_To_AI_StreamlinedSavesSpace)
+    let limitArrayObjectSize = limit_max_object_property_string_size_in_array(data_Sent_To_AI_StreamlinedSavesSpace, 'question', 500)
+    console.error('limited array is:', limitArrayObjectSize)
+    let de_duplicated_data = de_duplicate_array_of_objects(limitArrayObjectSize, 'question')
+
+    console.error('data im posting to ai', de_duplicated_data)
+    try{
+    AI_Response = await fetch(AppConfig().get_AI_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // Set the content type if you're sending JSON data
         'Authorization': extentionIdentifier, // Add any other headers as needed
         // Add any other headers as needed
       },
-      body: JSON.stringify(data_Sent_To_AI_StreamlinedSavesSpace) // Convert the data to a JSON string
+      body: JSON.stringify(de_duplicated_data) // Convert the data to a JSON string
     })
+  }
+  catch(error){
+    console.error('failed to fetch in handleAI', error)
+  }
+
+
+  
+
     // let AI_Response = await fetch('http://localhost:3000/Work-Search-App/groqAPI')
     // let AI_Response = await AppConfig().get_AI_URL()
     let AI_ResponseJSON = await AI_Response.json()
+    console.error('this is the ai response', AI_ResponseJSON)
     console.log('this is the ai response', AI_ResponseJSON)
 
-    console.log(data_Sent_To_AI_StreamlinedSavesSpace)
     console.log('megaQuestionList', full_data_not_sent_SavesAIprocessing)
 
 
