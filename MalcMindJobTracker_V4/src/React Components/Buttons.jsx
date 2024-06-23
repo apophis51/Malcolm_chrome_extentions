@@ -84,29 +84,13 @@ export default function Buttons({ documentText, disable }) {
             //data_Sent_To_AI shape is { question: questionText, options: options }
     let data_Sent_To_AI_StreamlinedSavesSpace = []
 
-        let observedMutations = new Map()
+
         var manipulate = { value: 'bitch' }
         // let observer = new MutationObserver(domUtils.handleMutations);\   
-        let observer = new MutationObserver(domUtils.wrapperfunction(observedMutations, manipulate));
-
-        let observerConfig = { childList: true, subtree: true }
-        observer.observe(document.body, observerConfig);
+       
         console.error(DOM_Input_Locations)
 
-        triggerDomMutations()
-        await Promise.resolve();
-        function triggerDomMutations() {
-            DOM_Input_Locations.forEach(field => {
-                console.log(field)
-                // we also need to push the label to the data so we can reference it later  
-                const label = document.querySelector(`label[for="${field.id}"]`) || field.closest('label') || field.parentElement;
-                field.focus()
-                field.dispatchEvent(domUtils.Mouseevent)
-            })
-
-        }
-        console.error(observedMutations)
-
+        
         DOM_Input_Locations.forEach(field => {
             console.log(field)
             // we also need to push the label to the data so we can reference it later  
@@ -119,7 +103,7 @@ export default function Buttons({ documentText, disable }) {
             // domUtils.simulateKeydown(field, 'Enter');
 
             const questionText = label ? label.textContent.trim() : "No label found";
-            results.push({ field: field.outerHTML, question: questionText });
+            results.push({ field: field.outerHTML, question: questionText }); //i dont think im using results any more
             try {
                 if (field.options.length > 0) {
                     console.log('running')
@@ -142,10 +126,34 @@ export default function Buttons({ documentText, disable }) {
                     extracted_data.push({ question: questionText, label: field })
                 }
             }
-
-
-
         });
+        let old_observed_mutations = new Map()
+        let observedMutations = []
+        let observer = new MutationObserver(domUtils.wrapperfunction(observedMutations, old_observed_mutations));
+
+        let observerConfig = { childList: true, subtree: true }
+        observer.observe(document.body, observerConfig);
+        triggerDomMutations()
+        await Promise.resolve();
+        function triggerDomMutations() {
+            DOM_Input_Locations.forEach(field => {
+                console.log(field)
+                // we also need to push the label to the data so we can reference it later  
+                const label = document.querySelector(`label[for="${field.id}"]`) || field.closest('label') || field.parentElement;
+                const questionText = label ? label.textContent.trim() : "No label found";
+
+                observedMutations.push({question: questionText, label: field})
+                // old_observed_mutations.set(question,questionText)
+                console.log(label.textContent.trim())
+                field.focus()
+                field.dispatchEvent(domUtils.Mouseevent)
+            })
+
+        }
+
+        console.error('old observed mutations',old_observed_mutations)
+        console.error('observed mutations',observedMutations)
+
 
 
         let extentionIdentifier = await AppConfig().idStatus()
@@ -159,6 +167,12 @@ export default function Buttons({ documentText, disable }) {
 
 
         let data_send_to_AI_endpoint = filter_object_property_from_object_array(de_duplicated_data)
+        let itterator = 0
+        data_send_to_AI_endpoint.forEach(element => {
+            if(observedMutations[itterator].options){
+                element.options = observedMutations[itterator].options
+            }
+        })
         console.log('data sent to ai end point:', data_send_to_AI_endpoint)
         console.error('data sent to ai end point:', data_send_to_AI_endpoint)
         console.error('old save space:', data_Sent_To_AI_StreamlinedSavesSpace)
@@ -168,7 +182,11 @@ export default function Buttons({ documentText, disable }) {
                 // object_to_save_context_space.push({ question: array[x].question, options: array[x].options })
                 //setting options to undefined is causing error so we dont pushed undefined properties
                 if(array[x].options){
-                    object_to_save_context_space.push({ question: array[x].question, options: array[x].options.textValue })
+                    let optionAccumulator = []
+                    array[x].options.forEach(option => {
+                        optionAccumulator.push(option.textValue)
+                    })
+                    object_to_save_context_space.push({ question: array[x].question, options: optionAccumulator })
                 }
                 else{
                     object_to_save_context_space.push({ question: array[x].question })
@@ -206,7 +224,7 @@ export default function Buttons({ documentText, disable }) {
         console.log('extracted data', extracted_data)
 
 
-        let manipulationResults = []
+        let final_dom_manipulation_results = []
         AI_ResponseJSON.data.information.forEach(item => {
             try {
                 let question = item.question
@@ -217,7 +235,7 @@ export default function Buttons({ documentText, disable }) {
                     if (findItem.options) {
                         let option = findItem.options.find(x => x.textValue == item.response)
                         if (option) {
-                            manipulationResults.push({ question: question, answer: option.value })
+                            final_dom_manipulation_results.push({ question: question, answer: option.value })
                             console.log(findItem.label.value)
                             findItem.label.click()
                             findItem.label.focus()
@@ -225,7 +243,7 @@ export default function Buttons({ documentText, disable }) {
                         }
                     }
                     else {
-                        manipulationResults.push({ question: question, answer: item.response })
+                        final_dom_manipulation_results.push({ question: question, answer: item.response })
 
                         findItem.label.focus()
                         findItem.label.click()
@@ -274,9 +292,9 @@ export default function Buttons({ documentText, disable }) {
 
         observer.disconnect();
 
-        console.log(manipulationResults)
-        console.error(manipulationResults)
-        console.error(observedMutations)
+        console.log(final_dom_manipulation_results)
+        console.error(final_dom_manipulation_results)
+
         console.error(manipulate)
 
 

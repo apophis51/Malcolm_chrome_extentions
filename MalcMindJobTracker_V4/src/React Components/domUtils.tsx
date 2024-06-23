@@ -14,7 +14,9 @@ export function wrapperfunction(observedMutations, manipulate){
                 /\*/
             ]
             console.error('we had one run')
-            manipulate.value = 'fuck'
+            // manipulate.value = 'fuck'
+            let itteration_tracker = 0
+
             mutationsList.forEach(mutation => {
         
                 if (mutation.type === 'childList') {
@@ -42,12 +44,15 @@ export function wrapperfunction(observedMutations, manipulate){
                                 // console.error(node)
                                 if (replay != '' && replay.length > 2) {
                                     console.error(replay)
-                                    observedMutations.set(node, replay)
-                                    // observedMutations[node.innerText] = replay
+                                    manipulate.set(node, replay)
+                                    console.error('tracker',itteration_tracker)
+                                    console.error(observedMutations[itteration_tracker])
+                                    observedMutations[itteration_tracker]["options"] = replay
                                 }
                             }
         
                         }
+                        itteration_tracker = itteration_tracker + 1
                     })
                 };
         
