@@ -128,13 +128,15 @@ export default function Buttons({ documentText, disable }) {
             }
         });
         let old_observed_mutations = new Map()
-        let observedMutations = []
-        let observer = new MutationObserver(domUtils.wrapperfunction(observedMutations, old_observed_mutations));
+        let triggered_dom_mutations = []
+        let observer = new MutationObserver(domUtils.wrapperfunction(triggered_dom_mutations, old_observed_mutations));
 
         let observerConfig = { childList: true, subtree: true }
         observer.observe(document.body, observerConfig);
         triggerDomMutations()
         await Promise.resolve();
+
+        //its getting outta sync here because there are 24 dispatched events in test but only 21 have dom mutations
         function triggerDomMutations() {
             DOM_Input_Locations.forEach(field => {
                 console.log(field)
@@ -142,7 +144,7 @@ export default function Buttons({ documentText, disable }) {
                 const label = document.querySelector(`label[for="${field.id}"]`) || field.closest('label') || field.parentElement;
                 const questionText = label ? label.textContent.trim() : "No label found";
 
-                observedMutations.push({question: questionText, label: field})
+                triggered_dom_mutations.push({question: questionText, label: field})
                 // old_observed_mutations.set(question,questionText)
                 console.log(label.textContent.trim())
                 field.focus()
@@ -152,7 +154,7 @@ export default function Buttons({ documentText, disable }) {
         }
 
         console.error('old observed mutations',old_observed_mutations)
-        console.error('observed mutations',observedMutations)
+        console.error('observed mutations',triggered_dom_mutations)
 
 
 
@@ -167,14 +169,30 @@ export default function Buttons({ documentText, disable }) {
 
 
         let data_send_to_AI_endpoint = filter_object_property_from_object_array(de_duplicated_data)
-        let itterator = 0
-        data_send_to_AI_endpoint.forEach(element => {
-            if(observedMutations[itterator].options){
-                element.options = observedMutations[itterator].options
+        // let itterator = 0
+        // delete this section to fix 
+        data_send_to_AI_endpoint.forEach((element,index) => {
+            console.error('hit',element.question)
+            triggered_dom_mutations.forEach((data,newindex) => {
+            if(data.question.includes(element.question)){
+                console.error('perfect hit',element.question)
+                // data_send_to_AI_endpoint[newindex].options = triggered_dom_mutations[triggered_dom_mutations.indexOf(element.options)].options 
+                if(data.options){
+                data_send_to_AI_endpoint[newindex].options = data.options
+                }
+
             }
         })
+            // if(triggered_dom_mutations[itterator].options){
+            //     console.log('hit')
+            //     element.options = triggered_dom_mutations[itterator].options
+            // }
+            // itterator++
+        })
+        //end delete section
         console.log('data sent to ai end point:', data_send_to_AI_endpoint)
         console.error('data sent to ai end point:', data_send_to_AI_endpoint)
+
         console.error('old save space:', data_Sent_To_AI_StreamlinedSavesSpace)
         function filter_object_property_from_object_array(array) {
             let object_to_save_context_space = []

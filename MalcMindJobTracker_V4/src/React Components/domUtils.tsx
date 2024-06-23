@@ -6,7 +6,7 @@ export const Mouseevent = new MouseEvent('mousedown', {
 });
 
 
-export function wrapperfunction(observedMutations, manipulate){
+export function wrapperfunction(triggered_dom_mutations, manipulate){
     
     return (
         function handleMutations(mutationsList, observer) {
@@ -44,10 +44,29 @@ export function wrapperfunction(observedMutations, manipulate){
                                 // console.error(node)
                                 if (replay != '' && replay.length > 2) {
                                     console.error(replay)
+                                    //clip here to make program work again
+                                    let text_to_match = mutation.target.parentElement.textContent.trim().match(/.+\*/)[0]
+                                    console.error(text_to_match)
+                //                     console.error('text',mutation.target.parentElement.textContent.trim())
+                //                     let llabel = document.querySelector(`label[for="${mutation.target.id}"]`) || mutation.target.closest('label') || mutation.target.parentElement;
+                // let qquestionText = label ? label.innerText : "No label found"
+                                    // console.error('secon go at it', qquestionText)
+
+                                    ////
                                     manipulate.set(node, replay)
                                     console.error('tracker',itteration_tracker)
-                                    console.error(observedMutations[itteration_tracker])
-                                    observedMutations[itteration_tracker]["options"] = replay
+                                    console.error(triggered_dom_mutations[itteration_tracker])
+                                    let temp = 0
+                                    triggered_dom_mutations.forEach((element,index) => {
+                                        if (element.question == text_to_match) {    
+                                            triggered_dom_mutations[index]["options"] = replay
+                                            triggered_dom_mutations[index]['mutatedChanges'] = true
+                                        }
+                                        temp = temp + 1
+                                    })
+                                    console.log('hit')
+                                    // triggered_dom_mutations[itteration_tracker]["options"] = replay
+                                    // triggered_dom_mutations[itteration_tracker]['mutatedChanges'] = true
                                 }
                             }
         
