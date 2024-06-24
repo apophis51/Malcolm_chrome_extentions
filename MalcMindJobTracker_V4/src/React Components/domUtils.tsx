@@ -43,10 +43,10 @@ export function wrapperfunction(triggered_dom_mutations, manipulate){
                                 replay = replay.split(/\*/)
                                 // console.error(node)
                                 if (replay != '' && replay.length > 2) {
-                                    console.error(replay)
+                                    console.info(replay)
                                     //clip here to make program work again
                                     let text_to_match = mutation.target.parentElement.textContent.trim().match(/.+\*/)[0]
-                                    console.error(text_to_match)
+                                    console.info(text_to_match)
                 //                     console.error('text',mutation.target.parentElement.textContent.trim())
                 //                     let llabel = document.querySelector(`label[for="${mutation.target.id}"]`) || mutation.target.closest('label') || mutation.target.parentElement;
                 // let qquestionText = label ? label.innerText : "No label found"
@@ -54,8 +54,8 @@ export function wrapperfunction(triggered_dom_mutations, manipulate){
 
                                     ////
                                     manipulate.set(node, replay)
-                                    console.error('tracker',itteration_tracker)
-                                    console.error(triggered_dom_mutations[itteration_tracker])
+                                    console.info('tracker',itteration_tracker)
+                                    console.info(triggered_dom_mutations[itteration_tracker])
                                     let temp = 0
                                     triggered_dom_mutations.forEach((element,index) => {
                                         if (element.question == text_to_match) {    

@@ -6,6 +6,7 @@ import AppConfig from '../AppConfig'
 import { atom, useAtom } from 'jotai'
 import { loggedIn } from './Atoms.js'
 import DevBar from './DevBar'
+import {handleAI} from './Buttons'
 
 const position = { x: 0, y: 0 }
 
@@ -139,6 +140,7 @@ async function toggleButtonState(){
                         <h2 className='text-white' >Work Search App</h2>
                         {/* <button className='btn' onClick={() => colorDom('set')}>Color DOM</button> */}
                         {/* <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button> */}
+                        <button className=' btn btn-sm bg-red-300' onClick={() => handleAI()}>AI</button>
                         <button className='btn btn-sm' onClick={() => disable()}>Hide App</button>
                         {/* <button className='btn btn-sm' onClick={() => removeButtons()}>Disable Buttons</button> */}
                         <button className='btn btn-sm' onClick={() => toggleButtonState()}>{buttonsDisabledState}</button>
