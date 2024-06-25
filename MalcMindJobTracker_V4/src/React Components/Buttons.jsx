@@ -58,6 +58,7 @@ export async function handleAI() {
 
     //extracted list shape is { question: questionText, options?: megaOptions, label: field }
     let extracted_data = []
+    let stitched_deduplicated_data_with_triggered_dom_mutations = []
     //data_Sent_To_AI shape is { question: questionText, options: options }
     /////////////////let data_Sent_To_AI_StreamlinedSavesSpace = []
 
@@ -144,7 +145,7 @@ export async function handleAI() {
 
     console.error('deduplicated data', de_duplicated_data)
 
-    let stitched_deduplicated_data_with_triggered_dom_mutations = [...de_duplicated_data]
+    stitched_deduplicated_data_with_triggered_dom_mutations = [...de_duplicated_data]
 
     /////veryyyy new
     stitched_deduplicated_data_with_triggered_dom_mutations.forEach((element, index) => {
@@ -249,7 +250,7 @@ export async function handleAI() {
 
             ////////let findItem = de_duplicated_data.find(x => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
             let findItem = stitched_deduplicated_data_with_triggered_dom_mutations.find((x) => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
-            let findIndex = extracted_data.findIndex((x) => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
+            let findIndex = stitched_deduplicated_data_with_triggered_dom_mutations.findIndex((x) => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
             //////////////////////******************************// let findIndex = extracted_data.findIndex((x) => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
             // console.log (findIndex)
             // console.log(question)//
@@ -284,12 +285,19 @@ export async function handleAI() {
                         console.error('find little index*****', findOptionIndex) /////////new
                         console.error('focused label alleged', stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label)
                         stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label.focus() // with out this i get output.js:49 File chooser dialog can only be shown with a user activation.
+                        console.error('hit here')
                         stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label.dispatchEvent(domUtils.Mouseevent)
-                        for (let i = 0; i < findOptionIndex; i++) { // Example: 3 times to reach the desired option
-                            domUtils.simulateKeydown(item, 'ArrowDown');
+                        for (let i = 0; i < 1; i++) { // Example: 3 times to reach the desired option
+                            domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'ArrowDown');///^#&(*Q&*(@&$&# )) this was changed from item
                         }
-                        domUtils.simulateKeydown(item, 'Enter');
+                        domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'Enter');
                     }
+                    // field.focus()
+                    // field.dispatchEvent(domUtils.Mouseevent)
+                    //   for (let i = 0; i < 1; i++) { // Example: 3 times to reach the desired option
+                    //     domUtils.simulateKeydown(field, 'ArrowDown');
+                    // }
+                    // domUtils.simulateKeydown(field, 'Enter');
                 }/////////new
                 else {
                     console.log('hit')
