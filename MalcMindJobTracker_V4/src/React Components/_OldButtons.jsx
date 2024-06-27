@@ -53,7 +53,9 @@ let jobMode = null
 export async function handleAI() {
     console.log('processing')
     let DOM_Input_Locations = document.querySelectorAll('input , select, textarea')
-    
+    //results shape is { field: field.outerHTML, question: questionText }
+    let results = []
+
     //extracted list shape is { question: questionText, options?: megaOptions, label: field }
     let extracted_data = []
     let stitched_deduplicated_data_with_triggered_dom_mutations = []
@@ -61,7 +63,7 @@ export async function handleAI() {
     /////////////////let data_Sent_To_AI_StreamlinedSavesSpace = []
 
 
-    var manipulate = { value: 'itch' }
+    var manipulate = { value: 'bitch' }
     // let observer = new MutationObserver(domUtils.handleMutations);\   
 
     console.error(DOM_Input_Locations)
@@ -79,7 +81,7 @@ export async function handleAI() {
         // domUtils.simulateKeydown(field, 'Enter');
 
         const questionText = label ? label.textContent.trim() : "No label found";
-        // results.push({ field: field.outerHTML, question: questionText }); 
+        results.push({ field: field.outerHTML, question: questionText }); //i dont think im using results any more
         try {
             if (field.options.length > 0) {
                 console.log('running')
@@ -159,6 +161,7 @@ export async function handleAI() {
             }
         })
     })
+    //end very new
 
 
     console.error('stitched_data_with_triggered_dom_mutations', stitched_deduplicated_data_with_triggered_dom_mutations)
@@ -255,27 +258,17 @@ export async function handleAI() {
             console.log(findItem)///new
             if (findItem) {
                 console.info('we found a goodone') // we need to make sure we are actually trying to change each good one we might have text matching issues
-                if (findItem.options && !findItem.mutatedChanges) {   
-                     let option = findItem.options.find(x => x.textValue == item.response)
+                //////if (findItem.options) {
+                if (findItem.options && !findItem.mutatedChanges) {   /////////new
+                    let option = findItem.options.find(x => x.textValue == item.response)
                     if (option) {
-                        // if (findOption) {
-                            let findOptionIndex = stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].options.findIndex(x => x == item.response) /////////new
-
-                        // final_dom_manipulation_results.push({ question: question, answer: option.value })
-                        // console.log(findItem.label.value)
+                        final_dom_manipulation_results.push({ question: question, answer: option.value })
+                        console.log(findItem.label.value)
                         findItem.label.click()
                         findItem.label.focus()
-                        // console.log(option.value)
-                         findItem.label.value = option.value
-                        // console.log(findItem.label.value)
-                        stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label.focus() // with out this i get output.js:49 File chooser dialog can only be shown with a user activation.
-                        console.error('hit here')
-                        stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label.dispatchEvent(domUtils.Mouseevent)
-                        for (let i = 0; i < findOptionIndex; i++) { // Example: 3 times to reach the desired option
-                            domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'ArrowDown');///^#&(*Q&*(@&$&# )) this was changed from item
-                        }
-                        domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'Enter');
-                        
+                        console.log(option.value)
+                        findItem.label.value = option.value
+                        console.log(findItem.label.value)
                     }
                 }
                 else if (findItem.options && findItem.mutatedChanges == true) {
@@ -294,7 +287,7 @@ export async function handleAI() {
                         stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label.focus() // with out this i get output.js:49 File chooser dialog can only be shown with a user activation.
                         console.error('hit here')
                         stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label.dispatchEvent(domUtils.Mouseevent)
-                        for (let i = 0; i < parseInt(findOptionIndex); i++) { // Example: 3 times to reach the desired option
+                        for (let i = 0; i < 1; i++) { // Example: 3 times to reach the desired option
                             domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'ArrowDown');///^#&(*Q&*(@&$&# )) this was changed from item
                         }
                         domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'Enter');
