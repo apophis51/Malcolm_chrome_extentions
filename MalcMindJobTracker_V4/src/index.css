@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* @layer components {
+  .custom-navbar {
+    @apply flex justify-center items-center bg-green-800 fixed z-[2147483647] text-white text-3xl ;
+  }
+} */
 /* 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

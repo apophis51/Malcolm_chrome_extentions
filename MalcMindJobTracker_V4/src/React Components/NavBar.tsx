@@ -132,8 +132,10 @@ async function toggleButtonState(){
 
     return (
         <>
+                    {/* <div className="custom-navbar dontTrack drager group " > */}
+
             <div className="flex justify-center items-center navbar bg-green-800 fixed z-[2147483647] dontTrack drager  text-white text-3xl group max-h-30" >
-                <div className='flex flex-col justify-center items-center' >
+                <div className='flex flex-col justify-center items-center ' >
                 {/* <div className='tooltip tooltip-bottom' data-tip="hold to drag bar"> */}
                     {AppConfig().Mode == 'local' && <DevBar />}
                     <div className='flex justify-center flex-wrap gap-10 '>

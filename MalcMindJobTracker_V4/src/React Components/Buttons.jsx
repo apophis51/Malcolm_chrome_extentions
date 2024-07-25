@@ -167,10 +167,10 @@ export async function handleAI() {
     // let itterator = 0
     // delete this section to fix 
     data_send_to_AI_endpoint.forEach((element, index) => {
-        console.info('hit', element.question)
+        console.log('hit', element.question)
         triggered_dom_mutations.forEach((data, newindex) => {
             if (data.question.includes(element.question)) {
-                console.info('perfect hit', element.question)
+                console.log('perfect hit', element.question)
                 // data_send_to_AI_endpoint[newindex].options = triggered_dom_mutations[triggered_dom_mutations.indexOf(element.options)].options 
                 if (data.options) {
                     data_send_to_AI_endpoint[newindex].options = data.options
@@ -252,11 +252,12 @@ export async function handleAI() {
             // console.log (findIndex)
             // console.log(question)//
 
-            console.log(findItem)///new
+            console.log(findItem)
             if (findItem) {
-                console.info('we found a goodone') // we need to make sure we are actually trying to change each good one we might have text matching issues
+                console.log('we found a goodone') // we need to make sure we are actually trying to change each good one we might have text matching issues
                 if (findItem.options && !findItem.mutatedChanges) {   
-                     let option = findItem.options.find(x => x.textValue == item.response)
+                    /*we need to find matches in the original dom that without case sensitivity*/
+                     let option = findItem.options.find(x => x.textValue.toLowerCase() == item.response.toLowerCase())
                     if (option) {
                         // if (findOption) {
                             let findOptionIndex = stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].options.findIndex(x => x == item.response) /////////new
@@ -287,7 +288,8 @@ export async function handleAI() {
                         console.error('major index', findIndex)
 
                         console.error('good one')
-                        let findOptionIndex = stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].options.findIndex(x => x == item.response) /////////new
+                        /*we need to find matches in the original dom that without case sensitivity*/
+                        let findOptionIndex = stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].options.findIndex(x => x.toLowerCase() == item.response.toLowerCase()) /////////new
                         console.error('=====>', findOption) /////////new
                         console.error('find little index*****', findOptionIndex) /////////new
                         console.error('focused label alleged', stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label)
@@ -352,12 +354,11 @@ export async function handleAI() {
         } //debug this morning
     })
 
-    console.error('haha')
     // await Promise.resolve();
 
     observer.disconnect();
 
-    console.log(final_dom_manipulation_results)
+    console.log('final dom manipulation results', final_dom_manipulation_results)
     console.error(final_dom_manipulation_results)
 
     console.error(manipulate)
