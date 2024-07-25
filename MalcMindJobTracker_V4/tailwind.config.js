@@ -8,5 +8,19 @@ export default {
     extend: {},
   },
   plugins: [require("daisyui")],
+  daisyui: {
+    themes: ["light",
+      {
+        mytheme: {
+
+
+          ...require("daisyui/src/theming/themes")["light"],
+         "success": "#065f46",
+
+        },
+      },
+    ],
+  },
+
 }
 

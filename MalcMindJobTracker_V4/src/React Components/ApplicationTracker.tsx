@@ -5,7 +5,8 @@ import Select from 'react-select'
 import { atom, useAtom, useSetAtom } from 'jotai'
 import { exportData, loggedIn, createADate } from './Atoms.js'
 import React from "react";
-console.log = function () { } 
+import InformationIcon from './utils/design/InformationIcon'
+console.log = function () { }
 
 const position = { x: 0, y: 0 }
 
@@ -32,29 +33,29 @@ interface WebSocketMessage {
 interface ExportData {
     data: { [key: string]: any }; // Adjust the value type as per your specific needs
 }
-type messageObject = { status: statusMessage, tailwindClassColor: tailwindClassColor, loadingIcon: string}
+type messageObject = { status: statusMessage, tailwindClassColor: tailwindClassColor, loadingIcon: string }
 type statusMessage = 'Submitting Job' | 'Submitting Job Rejection' | 'Submission Error' | 'Submission Sucessful!' | 'Retrieving AI Answers' | 'AI Retrieval Sucessful' | 'AI Retrieval Error' | 'Retrieving User Job Data' | 'User Job Data Retrieval Success!' | 'User Data Retrieval Error' | 'null'
-type tailwindClassColor ='bg-orange-600' | 'bg-red-600' | 'bg-green-700' | 'null'
+type tailwindClassColor = 'bg-orange-600' | 'bg-red-600' | 'bg-green-700' | 'null'
 
-function formatDisplayedStatusMessage(status: statusMessage){
+function formatDisplayedStatusMessage(status: statusMessage) {
     let tailwindClassColor: tailwindClassColor
     let loadingIcon = 'null'
     if (status.includes('Error')) {
         tailwindClassColor = 'bg-red-600'
     }
-    else if(status.includes('Sucessful')) {
+    else if (status.includes('Sucessful')) {
         tailwindClassColor = 'bg-green-700'
     }
-    else if(status == 'null'){
+    else if (status == 'null') {
         tailwindClassColor = 'null'
     }
-    else{
+    else {
         tailwindClassColor = 'bg-orange-600'
         loadingIcon = 'loading loading-spinner loading-sm'
     }
     console.log('hit promo')
     console.log(status, tailwindClassColor)
-    return { status: status, tailwindClassColor: tailwindClassColor, loadingIcon}
+    return { status: status, tailwindClassColor: tailwindClassColor, loadingIcon }
 }
 
 let prevJobs = null
@@ -65,7 +66,7 @@ export default function ApplicationTracker() {
     const [jobModeColor, setJobModeColor] = useState('bg-blue-200')
     const [rejectionModeColor, setRejectionModeColor] = useState('bg-white')
     const [retrievedJobs, setRetrievedJobs] = useState(null)
-    const [statusMessage, setStatusMessage] = useState<messageObject>({status: 'null', tailwindClassColor: 'null', loadingIcon: 'null'})
+    const [statusMessage, setStatusMessage] = useState<messageObject>({ status: 'null', tailwindClassColor: 'null', loadingIcon: 'null' })
     // const [webSocketData, setWebSocketData] = useState(null);
     const socketData = useRef<WebSocketMessage | null>(null)
     let rejectionModeOn = rejectionModeColor != 'bg-white'
@@ -99,7 +100,7 @@ export default function ApplicationTracker() {
      * 
      * This function is used to send data to our jobWebAPP or used to get data back
      */
-    async function JobListingHandler({ postType } : { postType: postType }) {
+    async function JobListingHandler({ postType }: { postType: postType }) {
         let fetchMethod: fetchMethod
         let url = AppConfig()!.jobApiURL
         let bodyType: any = null
@@ -148,10 +149,10 @@ export default function ApplicationTracker() {
             })
             console.log(results)
             prevJobs = await results.json(); // Note the additional 'await' here
-            if(fetchMethod == 'GET'){
-            setStatusMessage(formatDisplayedStatusMessage('null'))
+            if (fetchMethod == 'GET') {
+                setStatusMessage(formatDisplayedStatusMessage('null'))
             }
-            if(fetchMethod == 'POST' || fetchMethod == 'PUT'){
+            if (fetchMethod == 'POST' || fetchMethod == 'PUT') {
                 setStatusMessage(formatDisplayedStatusMessage('Submission Sucessful!'))
             }
             // setRetrievedJobs(prevJobs)
@@ -246,7 +247,7 @@ export default function ApplicationTracker() {
             right: '10vw',
             // backgroundColor: 'red',
             minHeight: '400px',
-            maxHeight: '400px',
+            maxHeight: '500px',
             maxWidth: '300px',
             minWidth: '300px',
         };
@@ -265,9 +266,16 @@ export default function ApplicationTracker() {
                 style={{
                     position: 'fixed',
                     ...handleStyle(),
-                }}>
-                <p className="flex justify-center text-xl bg-slate-700 rounded-xl">Application Tracker</p>
-                <h1 className='text-xl flex justify-center bg-slate-700 text-white'>Data Display</h1>
+                }}><div className='flex justify-center gap-3 items-center p-1'>
+                    <div >
+                        <p className="flex justify-center text-xl bg-slate-700 rounded-xl text-white">Application Tracker</p>
+                        <h1 className='text-xl flex justify-center bg-slate-700 text-white'>Data Display</h1>
+                    </div>
+                    <div>
+                    <InformationIcon />
+                    </div>
+                </div>
+
                 <div className="flex justify-center bg-slate-600 gap-1  pt-4">
                     <p className={`btn btn-sm hover:bg-blue-200 ${jobModeColor}`} onClick={applicationMode}>Apply Mode</p><p className={`btn btn-sm ${rejectionModeColor} hover:bg-blue-200`} onClick={applicationMode}>Rejection Mode</p>
                 </div>
@@ -303,6 +311,7 @@ export default function ApplicationTracker() {
                         </li>
                     ))}
                 </ul>
+                <br></br>
                 {/* {exportDataState.data.Job_Title} */}
             </div>
         </div >

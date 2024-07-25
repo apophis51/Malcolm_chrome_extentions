@@ -233,7 +233,7 @@ async function hideButtons(){
     ///////////////////////////////////////////// Light Yellow Function
 
     if (!(myButtons.includes(clickedNode.textContent) || clickedNode.classList.contains('dontTrack') || hasParrentWithClassResult)) {
-      if (disableStatus == "false") {
+      if (disableStatus == "false" && buttonsDisabled == "false") {
         clickedNode.style.backgroundColor = 'lightyellow';
       }
     }
@@ -320,7 +320,7 @@ if(!clickedNode.parentNode.classList.contains('dontTrack') && !clickedNode.class
       });
     }
   }
-
+  console.log('hit')
     if (disableStatus == "false") {
       let children = document.querySelectorAll('*');
       children.forEach(function (child) {
@@ -333,10 +333,10 @@ if(!clickedNode.parentNode.classList.contains('dontTrack') && !clickedNode.class
       });
 
     }
-    if (disableStatus == "true") {
+    if (disableStatus == "true" | buttonsDisabled == "true") {
       let children = document.querySelectorAll('*');
       children.forEach(function (child) {
-        child.style.border = '';
+        // child.style.border = '';
         child.addEventListener('mouseenter', function () {
           child.style.boxShadow = 'none';
         });

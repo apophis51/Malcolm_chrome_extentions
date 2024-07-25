@@ -431,6 +431,7 @@ export default function Buttons({ documentText, disable }) {
         });
     }
     console.log('triggered')
+    
 
     // useEffect(() => {
     //   console.log('the button descriptions were changed')
