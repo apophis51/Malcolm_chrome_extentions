@@ -1,7 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer components {
+  .custom-navbar {
+    @apply flex justify-center items-center navbar bg-green-800 fixed z-[2147483647] text-white text-3xl max-h-72 p-1 ;
+  }
+}
 
+/* @layer components {
+  .custom-navbar {
+    @apply min-w-full navbar bg-green-800 fixed z-[2147483647] text-white text-3xl ;
+  }
+} */
 /* @layer components {
   .custom-navbar {
     @apply flex justify-center items-center bg-green-800 fixed z-[2147483647] text-white text-3xl ;
