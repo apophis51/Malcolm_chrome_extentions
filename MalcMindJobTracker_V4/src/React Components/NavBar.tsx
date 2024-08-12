@@ -38,8 +38,6 @@ export default function navBar({ disable, enable, buttonsHidden, buttonsDisabled
         var children = document.querySelectorAll('*');
         if (setUnset == 'set') {
             children.forEach(function (child: any) {
-                // child.style.border = '1px solid black';
-
                 child.addEventListener('mouseenter', function () {
                     child.style.boxShadow = '0 0 10px rgba(0, 0, 700, 0.6)'; // Apply box shadow on hover
                 });
@@ -52,10 +50,6 @@ export default function navBar({ disable, enable, buttonsHidden, buttonsDisabled
         if (setUnset == 'unset') {
             children.forEach(function (child: any) {
                 child.style.border = '';
-
-                // child.removeEventListener('mouseenter', function() {
-                //     child.style.boxShadow = '0 0 10px rgba(0, 0, 700, 0.6)'; // Apply box shadow on hover
-                // });
                 child.addEventListener('mouseenter', function () {
                     child.style.boxShadow = 'none'; // Apply box shadow on hover
                 });
@@ -111,16 +105,6 @@ async function toggleButtonState(){
 }
 
     useEffect(() => {
-        // linkActivator('set')
-        // disabler()
-        // async function disabler(){
-        //     if (AppConfig().disableStatus() == 'true'){
-        //         colorDom('set')
-        //     }
-        //     else {
-        //         colorDom('unset')
-        //     }
-        // }
         if (buttonsDisabled == "true") {
             setButtonsDisabledState('Enable Buttons')
         }
@@ -133,23 +117,16 @@ async function toggleButtonState(){
     return (
         <>
                     <div className="custom-navbar dontTrack drager group " >
-
-            {/* <div className="flex justify-center items-center navbar bg-green-800 fixed z-[2147483647] dontTrack drager  text-white text-3xl group max-h-56 min-w-max" > */}
                 <div className='flex flex-col justify-center items-center ' >
-                {/* <div className='tooltip tooltip-bottom' data-tip="hold to drag bar"> */}
                     {AppConfig().Mode == 'local' && <DevBar />}
                     <div className='flex justify-center flex-wrap gap-10 '>
-                        <h2 className='text-white' >Work Search App</h2>
-                        {/* <button className='btn' onClick={() => colorDom('set')}>Color DOM</button> */}
-                        {/* <button className='btn' onClick={() => colorDom('unset')}>UNColor DOM</button> */}
+                        <h2 className='text-white' >MalcMind - AI Job Helper</h2>
                         <button className=' btn btn-sm bg-red-300' onClick={() => handleAI()}>AI</button>
                         <button className='btn btn-sm' onClick={() => disable()}>Hide App</button>
-                        {/* <button className='btn btn-sm' onClick={() => removeButtons()}>Disable Buttons</button> */}
                         <button className='btn btn-sm' onClick={() => toggleButtonState()}>{buttonsDisabledState}</button>
                         {(mode == "local") && <button className='btn btn-sm' onClick={() => enable()}>Enable App</button>}
                         {!LoggedIn && <button className='btn btn-sm' onClick={handleURL}>Activate</button>}
                         {LoggedIn && <button className='btn btn-sm' onClick={handleLogOut}>LogOut</button>}
-                        {/* <p  className="tooltip tooltip-bottom w-full" data-tip="hold to drag bar">.</p> */}
                     </div>
                     <p className='text-sm text-white'>{User}</p>
                     <p className='text-sm text-white '>View Submitted Jobs at <button className='dontTrack' onClick={handleViewJobs}><a>{AppConfig().submittedJobURL}</a></button></p>

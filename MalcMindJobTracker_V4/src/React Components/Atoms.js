@@ -19,7 +19,6 @@ console.log('Current Date:', formattedDate);
 return formattedDate
 }
 
-// export const exportedDate =  atom(formattedDate) 
 
 
 

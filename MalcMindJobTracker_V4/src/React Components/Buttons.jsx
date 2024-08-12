@@ -16,36 +16,6 @@ import limit_max_object_property_string_size_in_array from './utils/array/limit_
 
 import { useRef, useEffect, useMemo, useState } from 'react';  //new
 
-
-// export default function Buttons({test}) {
-//     const shadowRef = useRef();
-
-//   useEffect(() => {
-//     const shadow = shadowRef.current.attachShadow({ mode: 'open' });
-
-//     // Create your Shadow DOM content
-//     const content = (
-//       <div key={Math.random()}>
-//         <div className='flex gap-10 justify-center'>
-//           <button className='btn btn-active btn-accent'>Title</button>
-//           <button className='btn'>Company</button>
-//           <button className='btn' onClick={handleEvent}>
-//             Description
-//           </button>
-//         </div>
-//       </div>
-//     );
-
-//     // Use React's render method to append the JSX content to the shadow DOM
-//     ReactDOM.render(content, shadow);
-//   }, []);
-
-//   const handleEvent = () => {
-//     console.log('Button clicked!');
-//   };
-
-//   return <div ref={shadowRef}></div>;
-// };
 let initialtarget = null
 let jobMode = null
 
@@ -53,33 +23,24 @@ let jobMode = null
 export async function handleAI() {
     console.log('processing')
     let DOM_Input_Locations = document.querySelectorAll('input , select, textarea')
-    
-    //extracted list shape is { question: questionText, options?: megaOptions, label: field }
+
     let extracted_data = []
     let stitched_deduplicated_data_with_triggered_dom_mutations = []
-    //data_Sent_To_AI shape is { question: questionText, options: options }
-    /////////////////let data_Sent_To_AI_StreamlinedSavesSpace = []
+
 
 
     var manipulate = { value: 'itch' }
-    // let observer = new MutationObserver(domUtils.handleMutations);\   
 
     console.error(DOM_Input_Locations)
 
 
     DOM_Input_Locations.forEach(field => {
         console.log(field)
-        // we also need to push the label to the data so we can reference it later  
         const label = document.querySelector(`label[for="${field.id}"]`) || field.closest('label') || field.parentElement;
         field.focus()
-        // field.dispatchEvent(domUtils.Mouseevent)
-        //   for (let i = 0; i < 1; i++) { // Example: 3 times to reach the desired option
-        //     domUtils.simulateKeydown(field, 'ArrowDown');
-        // }
-        // domUtils.simulateKeydown(field, 'Enter');
+
 
         const questionText = label ? label.textContent.trim() : "No label found";
-        // results.push({ field: field.outerHTML, question: questionText }); 
         try {
             if (field.options.length > 0) {
                 console.log('running')
@@ -90,15 +51,12 @@ export async function handleAI() {
                     options.push(field.options[i].text)
 
                 }
-                //////////////data_Sent_To_AI_StreamlinedSavesSpace.push({ question: questionText, options: options })
 
                 extracted_data.push({ question: questionText, options: megaOptions, label: field })
             }
         }
         catch {
             if (questionText.length > 0) {
-                ////////////// data_Sent_To_AI_StreamlinedSavesSpace.push({ question: questionText })
-
                 extracted_data.push({ question: questionText, label: field })
             }
         }
@@ -112,16 +70,13 @@ export async function handleAI() {
     triggerDomMutations()
     await Promise.resolve();
 
-    //its getting outta sync here because there are 24 dispatched events in test but only 21 have dom mutations
     function triggerDomMutations() {
         DOM_Input_Locations.forEach(field => {
             console.log(field)
-            // we also need to push the label to the data so we can reference it later  
             const label = document.querySelector(`label[for="${field.id}"]`) || field.closest('label') || field.parentElement;
             const questionText = label ? label.textContent.trim() : "No label found";
 
             triggered_dom_mutations.push({ question: questionText, label: field })
-            // old_observed_mutations.set(question,questionText)
             console.log(label.textContent.trim())
             field.focus()
             field.dispatchEvent(domUtils.Mouseevent)
@@ -129,7 +84,6 @@ export async function handleAI() {
 
     }
 
-    ////////console.error('old observed mutations',old_observed_mutations)
     console.error('observed mutations => Triggered_dom_mutations array', triggered_dom_mutations)
 
 
@@ -145,12 +99,9 @@ export async function handleAI() {
 
     stitched_deduplicated_data_with_triggered_dom_mutations = [...de_duplicated_data]
 
-    /////veryyyy new
     stitched_deduplicated_data_with_triggered_dom_mutations.forEach((element, index) => {
-        // console.error('hit',element.question)
         triggered_dom_mutations.forEach((data, newindex) => {
             if (data.question.includes(element.question)) {
-                // console.error('perfect hit',element.question)
                 if (data.options) {
                     stitched_deduplicated_data_with_triggered_dom_mutations[newindex].options = data.options
                     stitched_deduplicated_data_with_triggered_dom_mutations[newindex]['mutatedChanges'] = true
@@ -164,38 +115,25 @@ export async function handleAI() {
     console.error('stitched_data_with_triggered_dom_mutations', stitched_deduplicated_data_with_triggered_dom_mutations)
 
     let data_send_to_AI_endpoint = filter_object_property_from_object_array(de_duplicated_data)
-    // let itterator = 0
-    // delete this section to fix 
+
     data_send_to_AI_endpoint.forEach((element, index) => {
         console.log('hit', element.question)
         triggered_dom_mutations.forEach((data, newindex) => {
             if (data.question.includes(element.question)) {
                 console.log('perfect hit', element.question)
-                // data_send_to_AI_endpoint[newindex].options = triggered_dom_mutations[triggered_dom_mutations.indexOf(element.options)].options 
                 if (data.options) {
                     data_send_to_AI_endpoint[newindex].options = data.options
-                    // old_to_save_context_space[newindex].options = data.options
-                    // old_to_save_context_space[newindex]['mutatedChanges'] = true
                 }
 
             }
         })
-        // if(triggered_dom_mutations[itterator].options){
-        //     console.log('hit')
-        //     element.options = triggered_dom_mutations[itterator].options
-        // }
-        // itterator++
     })
-    //end delete section
     console.log('data sent to ai end point:', data_send_to_AI_endpoint)
     console.error('data sent to ai end point:', data_send_to_AI_endpoint)
 
-    ///////////////////////console.error('old save space:', data_Sent_To_AI_StreamlinedSavesSpace)
     function filter_object_property_from_object_array(array) {
         let object_to_save_context_space = []
         for (let x = 0; x < array.length; x++) {
-            // object_to_save_context_space.push({ question: array[x].question, options: array[x].options })
-            //setting options to undefined is causing error so we dont pushed undefined properties
             if (array[x].options) {
                 let optionAccumulator = []
                 array[x].options.forEach(option => {
@@ -215,23 +153,15 @@ export async function handleAI() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Set the content type if you're sending JSON data
-                'Authorization': extentionIdentifier, // Add any other headers as needed
-                // Add any other headers as needed
+                'Authorization': extentionIdentifier,
             },
             body: JSON.stringify(data_send_to_AI_endpoint) // Convert the data to a JSON string
-
-            // body: JSON.stringify(data_Sent_To_AI_StreamlinedSavesSpace) // Convert the data to a JSON string
         })
     }
     catch (error) {
         console.error('failed to fetch in handleAI', error)
     }
 
-
-
-
-    // let AI_Response = await fetch('http://localhost:3000/Work-Search-App/groqAPI')
-    // let AI_Response = await AppConfig().get_AI_URL()
     let AI_ResponseJSON = await AI_Response.json()
     console.error('this is the ai response', AI_ResponseJSON)
     console.log('this is the ai response', AI_ResponseJSON)
@@ -245,69 +175,53 @@ export async function handleAI() {
         try {
             let question = item.question
 
-            ////////let findItem = de_duplicated_data.find(x => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
             let findItem = stitched_deduplicated_data_with_triggered_dom_mutations.find((x) => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
             let findIndex = stitched_deduplicated_data_with_triggered_dom_mutations.findIndex((x) => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
-            //////////////////////******************************// let findIndex = extracted_data.findIndex((x) => x.question.replace(/\*/g, '') == question.replace(/\*/g, ''))
-            // console.log (findIndex)
-            // console.log(question)//
+
 
             console.log(findItem)
             if (findItem) {
-                console.log('we found a goodone') // we need to make sure we are actually trying to change each good one we might have text matching issues
-                if (findItem.options && !findItem.mutatedChanges) {   
+                if (findItem.options && !findItem.mutatedChanges) {
                     /*we need to find matches in the original dom that without case sensitivity*/
-                     let option = findItem.options.find(x => x.textValue.toLowerCase() == item.response.toLowerCase())
+                    let option = findItem.options.find(x => x.textValue.toLowerCase() == item.response.toLowerCase())
                     if (option) {
-                        // if (findOption) {
-                            let findOptionIndex = stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].options.findIndex(x => x == item.response) /////////new
-
-                        // final_dom_manipulation_results.push({ question: question, answer: option.value })
-                        // console.log(findItem.label.value)
+                        let findOptionIndex = stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].options.findIndex(x => x == item.response) /////////new
                         findItem.label.click()
                         findItem.label.focus()
-                        // console.log(option.value)
-                         findItem.label.value = option.value
-                        // console.log(findItem.label.value)
+                        findItem.label.value = option.value
                         stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label.focus() // with out this i get output.js:49 File chooser dialog can only be shown with a user activation.
                         console.error('hit here')
                         stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label.dispatchEvent(domUtils.Mouseevent)
-                        for (let i = 0; i < findOptionIndex; i++) { // Example: 3 times to reach the desired option
-                            domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'ArrowDown');///^#&(*Q&*(@&$&# )) this was changed from item
+                        for (let i = 0; i < findOptionIndex; i++) {
+                            domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'ArrowDown');
                         }
                         domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'Enter');
-                        
+
                     }
                 }
                 else if (findItem.options && findItem.mutatedChanges == true) {
-                    console.info('we found a triggered dom mutation')   /////////new
-                    let findOption = stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].options.find(x => x == item.response) /////////new
-                    // let validResponse = findOption.length > 0
+                    console.info('we found a triggered dom mutation')
+                    let findOption = stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].options.find(x => x == item.response)
                     let validResponse = (findOption)
                     if (validResponse) {
                         console.error('major index', findIndex)
 
                         console.error('good one')
                         /*we need to find matches in the original dom that without case sensitivity*/
-                        let findOptionIndex = stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].options.findIndex(x => x.toLowerCase() == item.response.toLowerCase()) /////////new
-                        console.error('=====>', findOption) /////////new
-                        console.error('find little index*****', findOptionIndex) /////////new
+                        let findOptionIndex = stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].options.findIndex(x => x.toLowerCase() == item.response.toLowerCase())
+                        console.error('=====>', findOption)
+                        console.error('find little index*****', findOptionIndex)
                         console.error('focused label alleged', stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label)
                         stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label.focus() // with out this i get output.js:49 File chooser dialog can only be shown with a user activation.
                         console.error('hit here')
                         stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label.dispatchEvent(domUtils.Mouseevent)
                         for (let i = 0; i < parseInt(findOptionIndex); i++) { // Example: 3 times to reach the desired option
-                            domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'ArrowDown');///^#&(*Q&*(@&$&# )) this was changed from item
+                            domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'ArrowDown');
                         }
                         domUtils.simulateKeydown(stitched_deduplicated_data_with_triggered_dom_mutations[findIndex].label, 'Enter');
                     }
-                    // field.focus()
-                    // field.dispatchEvent(domUtils.Mouseevent)
-                    //   for (let i = 0; i < 1; i++) { // Example: 3 times to reach the desired option
-                    //     domUtils.simulateKeydown(field, 'ArrowDown');
-                    // }
-                    // domUtils.simulateKeydown(field, 'Enter');
-                }/////////new
+
+                }
                 else {
                     console.log('hit')
                     final_dom_manipulation_results.push({ question: question, answer: item.response })
@@ -343,7 +257,7 @@ export async function handleAI() {
                             input.dispatchEvent(inputEvent);
                         }
                     }
-                    //  findItem.label.value = item.response
+
                 }
             }
             console.log(question)
@@ -351,10 +265,9 @@ export async function handleAI() {
         catch (error) {
 
             console.error(' there was a problem with our form inputs:', error)
-        } //debug this morning
+        }
     })
 
-    // await Promise.resolve();
 
     observer.disconnect();
 
@@ -364,9 +277,6 @@ export async function handleAI() {
     console.error(manipulate)
 
 
-
-    // let originNode = AppConfig().getClickedEvent()
-    // console.log(originNode.target.textContent)
     console.log('## AI button clicked')
 
 }
@@ -378,7 +288,6 @@ export default function Buttons({ documentText, disable }) {
 
     const [exportDataState, setExportDataState] = useAtom(exportData)
     const [postingUrl, setPostingUrl] = useAtom(postingUrlSet)
-    //const buttonDescriptions = useMemo(() => useAtomValue(jobDescription), [jobDescription])
 
     if (documentText.textContent == 'Apply Mode' && jobMode != 'Apply Mode') {
         jobMode = 'Apply Mode'
@@ -389,12 +298,7 @@ export default function Buttons({ documentText, disable }) {
     console.log(documentText.textContent)
     console.log(exportDataState)
     console.log(jobMode)
-    // function deleteButtons(){
-    //   let removeButtons = document.querySelectorAll('.button-container');
-    //   removeButtons.forEach(function(button) {
-    //       button.remove();
-    //     });
-    // }
+
 
 
     function handleData(e) {
@@ -432,11 +336,8 @@ export default function Buttons({ documentText, disable }) {
         });
     }
     console.log('triggered')
-    
 
-    // useEffect(() => {
-    //   console.log('the button descriptions were changed')
-    // }, [buttonDescriptions])
+
 
     return (
         <div key={randomNumber}>
@@ -446,9 +347,7 @@ export default function Buttons({ documentText, disable }) {
                 <button className='btn btn-sm ' onClick={(e) => handleData(e)}>Company</button>
                 <button className='btn btn-sm ' onClick={(e) => handleData(e)}>Rejection_Message</button>
                 <button className='btn btn-sm ' onClick={(e) => handleData(e)}>Job_Description</button>
-                {/* <button className='btn btn-sm ' onClick={deleteButtons}>Remove Buttons</button> */}
                 <button className='btn btn-sm ' onClick={() => removeButtons()}>Collapse</button>
-                {/* <button className='btn btn-sm ' onClick={()=> disable()}>Disable App</button> */}
             </div>
         </div>
     )

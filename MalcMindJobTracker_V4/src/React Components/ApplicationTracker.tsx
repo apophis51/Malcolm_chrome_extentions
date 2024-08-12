@@ -84,7 +84,6 @@ export default function ApplicationTracker() {
         // Handle incoming messages
         ws.onmessage = (event) => {
             const newData = JSON.parse(event.data);
-            // setWebSocketData(newData);
             socketData.current = newData
             console.log(socketData.current)
         };
@@ -241,11 +240,9 @@ export default function ApplicationTracker() {
 
     const handleStyle = () => {
         return {
-            // top: boxPosition.y,
-            // left: boxPosition.x,
+
             bottom: '10vh',
             right: '10vw',
-            // backgroundColor: 'red',
             minHeight: '400px',
             maxHeight: '500px',
             maxWidth: '300px',
@@ -259,7 +256,6 @@ export default function ApplicationTracker() {
             <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
             <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
             <p>
-                {/* {boxPosition.x} {boxPosition.y} */}
             </p>
             <div
                 className="card draggable resizable dontTrack  bg-slate-700 text-white border-2 border-green-900 "
@@ -282,18 +278,7 @@ export default function ApplicationTracker() {
                 <div className='text-black pt-3 pb-3 bg-slate-600'>
                     {rejectionModeOn && <Select options={retrievedJobs} placeholder={'Select a company'} onChange={(result) => { updateDisplayedJobs(result) }} />}
                 </div>
-                {/* <div className='flex justify-center bg-slate-600'>
-                    {rejectionModeColor != 'bg-white' &&
-                        <select className="select select-bordered  max-w-[90%] mt-4 text-black ">
-                            <option disabled selected>Select The Rejection Company</option>
-                            {retrievedJobs && prevJobs.data.information.data.map((item) => {
-                                const matches = (item.attributes.Company).match(/[a-zA-Z ]+/g)
-                                if (matches) {
-                                    return (<option>{matches.join('').trim()}</option>)
-                                }
-                            })}
-                        </select>}
-                </div> */}
+       
                 <div className="flex justify-center items-center bg-slate-600">
                     {!rejectionModeOn && <button className='btn btn-sm bg-red-200 mb-5' onClick={() => JobListingHandler({ postType: 'submitNewJobApplication' })}>
                         Update Applied Jobs
@@ -312,7 +297,6 @@ export default function ApplicationTracker() {
                     ))}
                 </ul>
                 <br></br>
-                {/* {exportDataState.data.Job_Title} */}
             </div>
         </div >
     );

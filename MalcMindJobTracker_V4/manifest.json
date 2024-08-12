@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "MalcMind JobExtention",
-    "version": "4.0",
-    "description": "This is a Job Extention that keeps track of the jobs you have applied for.",
+    "name": "MalcMind AIJobHelperAPP",
+    "version": "1.0",
+    "description": "This is a Job Extention that keeps track of the jobs you have applied for and autofills job applications with AI.",
     "icons": {
       "16": "images/icon-16.png",
       "32": "images/icon-32.png",

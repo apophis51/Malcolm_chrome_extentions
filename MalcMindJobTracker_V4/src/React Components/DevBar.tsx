@@ -24,9 +24,6 @@ export default function DevBar() {
         catch {
             setDeployed('failed')
         }
-        // else if(!scriptDeployed){
-        //     setDeployed('failed')
-        // }
     }
 
     return (

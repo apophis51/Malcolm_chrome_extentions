@@ -17,8 +17,7 @@ export default function de_duplicate_array_of_objects(array: Array<object>, obje
     return de_Duplicated_Array
 
 }
-// console.log('cool')
-// let tarse = de_duplicate_array_of_object(testObject, 'question')
+
 function de_duplicate_array_of_object(array: Array<object>, object_to_deduplicate: string) {
 
     let parse = array.reduce((de_Duplicated_Array: any, currentValue: object, index: number) => {
@@ -33,6 +32,5 @@ function de_duplicate_array_of_object(array: Array<object>, object_to_deduplicat
     return parse
 }
 
-// console.log(tarse)
-// console.log('cool')
+
 

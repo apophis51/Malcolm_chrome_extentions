@@ -39,18 +39,8 @@ async function codeLogger(message,onOff,type,flavor){
 
 export default function AppConfig(mode = 'local') {
   console.log("chrome.storage status:",chrome.storage)
+  
   if (chrome.storage != undefined) mode = 'production'
-  // if (chrome.storage != undefined) mode = 'custom'
-
-  // let testLocalStatus = await fetch('http://localhost:5173')
-  // console.log(mode)
-  // console.log(testLocalStatus.status)
-  // console.log(testLocalStatus.status == 200)
-  // if (testLocalStatus.status == 200){
-  //   console.log('test')
-  //   mode = 'local'
-  //   console.log('new mode',mode)
-  // }
   if (mode == 'local') {
     console.log(localStorage.getItem('disabled'))
     return {
@@ -65,15 +55,12 @@ export default function AppConfig(mode = 'local') {
       storageHideButtonsTrue:(() => localStorage.setItem('hideButtons', "true")),
       buttonStatus: (() => localStorage.getItem('hideButtons')),
       disableStatus: (() => localStorage.getItem('disabled')),
-      // storageSaveId: (() => localStorage.setItem('id', generateId())),
       idStatus: (() => localStorage.getItem('id')),
       clearStorage: (() => localStorage.clear()),
       storeID: ((id) => localStorage.setItem('id', id)),
       idGeneratorURL: 'http://localhost:3000/Work-Search-App/Authorize/api',
       generateID: (() => generateId()),
       isAuthorized: (() => authorizedStatus('http://localhost:3532/userMap')),
-      // getJobs: (() => fetch('https://malcmind-strapi-cms-production.up.railway.app/api/job-searches?pagination[page]=1&pagination[pageSize]=80&filters[userEmail][$eqi]=malcolmxvernon@hotmail.com')),
-      // get_AI_URL: (()=> fetch('http://localhost:3000/Work-Search-App/groqAPI'))
       get_AI_URL: 'http://localhost:3000/Work-Search-App/groqAPI',
       codeLogger: (()=> codeLogger()),
       get_Job_Rejections: 'http://localhost:3000/Work-Search-App/api-job-rejections',
@@ -93,7 +80,6 @@ export default function AppConfig(mode = 'local') {
       storageHideButtonsTrue:(() => chrome.storage.local.set({ 'hideButtons': "true" })),
       buttonStatus: (() => chrome.storage.local.get('hideButtons').then((result) => { return result.hideButtons; })),
       disableStatus: ((() => chrome.storage.local.get('disabled').then((result) => { return result.disabled; }))),
-      // storageSaveId: (() => chrome.storage.local.set({ 'id': generateId() })),
       idStatus: (() => chrome.storage.local.get('id').then((result) => { return result.id; })),
       clearStorage: (() => chrome.storage.local.clear()),
       storeID: ((id) => chrome.storage.local.set({ 'id': id })),
@@ -119,7 +105,6 @@ export default function AppConfig(mode = 'local') {
       storageHideButtonsTrue:(() => chrome.storage.local.set({ 'hideButtons': "true" })),
       buttonStatus: (() => chrome.storage.local.get('hideButtons').then((result) => { return result.hideButtons; })),
       disableStatus: ((() => chrome.storage.local.get('disabled').then((result) => { return result.disabled; }))),
-      // storageSaveId: (() => chrome.storage.local.set({ 'id': generateId() })),
       idStatus: (() => chrome.storage.local.get('id').then((result) => { return result.id; })),
       clearStorage: (() => chrome.storage.local.clear()),
       storeID: ((id) => chrome.storage.local.set({ 'id': id })),
